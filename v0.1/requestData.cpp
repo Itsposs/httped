@@ -74,7 +74,8 @@ requestData::~requestData()
 {
     std::cout << "~requestData()" << std::endl;
     struct epoll_event ev;
-    // 超时的一定都是读请求，没有"被动"写。
+    // 超时的一定都是读请求，没有"被动"写
+	// 先删除再清理时间，关闭套接字
     ev.events = EPOLLIN | EPOLLET | EPOLLONESHOT;
     ev.data.ptr = (void*)this;
     epoll_ctl(epollfd, EPOLL_CTL_DEL, fd, &ev);
@@ -534,8 +535,9 @@ int requestData::analysisRequest()
         }
         std::cout << "content size ==" << content.size() << std::endl;
         vector<char> data(content.begin(), content.end());
-        //Mat test = imdecode(data, CV_LOAD_IMAGE_ANYDEPTH|CV_LOAD_IMAGE_ANYCOLOR);
-        //imwrite("receive.bmp", test);
+		// ???
+        Mat test = imdecode(data, CV_LOAD_IMAGE_ANYDEPTH|CV_LOAD_IMAGE_ANYCOLOR);
+        imwrite("receive.bmp", test);
         return ANALYSIS_SUCCESS;
     }
     else if (method == METHOD_GET)
@@ -573,6 +575,7 @@ int requestData::analysisRequest()
             return ANALYSIS_ERROR;
         }
         int src_fd = open(file_name.c_str(), O_RDONLY, 0);
+		// ???
         char *src_addr = static_cast<char*>(mmap(NULL, sbuf.st_size, PROT_READ, MAP_PRIVATE, src_fd, 0));
         close(src_fd);
     
@@ -583,7 +586,8 @@ int requestData::analysisRequest()
             perror("Send file failed");
             return ANALYSIS_ERROR;
         }
-        munmap(src_addr, sbuf.st_size);
+		// ???
+        munmap(src_addr, sbuf.st_size);  
         return ANALYSIS_SUCCESS;
     }
     else
@@ -612,6 +616,7 @@ void requestData::handleError(int fd, int err_num, string short_msg)
     writen(fd, send_buff, strlen(send_buff));
 }
 
+// 改用C++11
 mytimer::mytimer(requestData *_request_data, int timeout): deleted(false), request_data(_request_data)
 {
     //cout << "mytimer()" << endl;

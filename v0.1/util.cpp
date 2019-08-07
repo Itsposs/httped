@@ -5,6 +5,7 @@
 #include <errno.h>
 #include <string.h>
 
+// 适度修改
 ssize_t readn(int fd, void *buff, size_t n)
 {
     size_t nleft = n;
