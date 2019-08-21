@@ -68,7 +68,7 @@ requestData::requestData(int _epollfd, int _fd, std::string _path):
     againTimes(0), path(_path), fd(_fd), epollfd(_epollfd), 
 	now_read_pos(0), state(STATE_PARSE_URI), h_state(h_start), 
 	isfinish(false), keep_alive(false), timer(NULL)
-{ }
+{ std::cout << "requestData(*)" << std::endl; }
 
 requestData::~requestData()
 {
@@ -89,21 +89,25 @@ requestData::~requestData()
 
 void requestData::addTimer(mytimer *mtimer)
 {
+	std::cout << "addTimer" << std::endl;
     if (timer == NULL)
         timer = mtimer;
 }
 
 int requestData::getFd() const
 {
+	std::cout << "getFd" << std::endl;
     return fd;
 }
 void requestData::setFd(int _fd)
 {
+	std::cout << "setFd" <<  std::endl;
     fd = _fd;
 }
 
 void requestData::reset()
 {
+	std::cout << "reset()" << std::endl;
     againTimes = 0;
     content.clear();
     file_name.clear();
@@ -117,6 +121,7 @@ void requestData::reset()
 
 void requestData::seperateTimer()
 {
+	std::cout << "seperateTimer" << std::endl;
     if (timer)
     {
         timer -> clearReq();
@@ -126,16 +131,15 @@ void requestData::seperateTimer()
 
 void requestData::handleRequest()
 {
+	std::cout << "handleRequest" << std::endl;
     char buff[MAX_BUFF];
     bool isError = false;
-    std::cout << "MAX_BUFF:" << MAX_BUFF << std::endl; 
 
 	while(true)
     {
         int read_num = readn(fd, buff, MAX_BUFF);
 		std::cout << "read_num:" << read_num << std::endl;
-        std::cout << "buff:" << std::endl;
-		std::cout << buff << std::endl;
+		std::cout << "buff:" << buff << std::endl;
 
 		if(read_num < 0)
         {
@@ -160,7 +164,7 @@ void requestData::handleRequest()
         
 		string now_read(buff, buff + read_num);
         content += now_read;
-		std::cout << "content:" << content << std::endl;
+		//std::cout << "content:" << content << std::endl;
 
         if(state == STATE_PARSE_URI)
         {
@@ -179,7 +183,6 @@ void requestData::handleRequest()
         if(state == STATE_PARSE_HEADERS)
         {
             int flag = this -> parse_Headers();
-			std::cout << "6" << std::endl;
             if(flag == PARSE_HEADER_AGAIN)
             {  
                 break;
@@ -278,6 +281,7 @@ void requestData::handleRequest()
 
 int requestData::parse_URI()
 {
+	std::cout << "parse_URI" << std::endl;
     string &str = content;
     // 读到完整的请求行再开始解析请求
     int pos = str.find('\r', now_read_pos);
@@ -299,7 +303,7 @@ int requestData::parse_URI()
         str = str.substr(pos + 1);
     else 
         str.clear();
-	std::cout << "str:" << str << std::endl;
+	//std::cout << "str:" << str << std::endl;
     // Method
     pos = request_line.find("GET");
     if(pos < 0)
@@ -384,8 +388,9 @@ int requestData::parse_URI()
 
 int requestData::parse_Headers()
 {
+	std::cout << "parse_Headers" << std::endl;
     string &str = content;
-	std::cout << "parse_Headers:" << content << std::endl;
+	std::cout << "content1:" << str << std::endl;
     int key_start = -1, key_end = -1, value_start = -1, value_end = -1;
     int now_read_line_begin = 0;
     bool notFinish = true;
@@ -502,6 +507,7 @@ int requestData::parse_Headers()
 
 int requestData::analysisRequest()
 {
+	std::cout << "analysisRequest" << std::endl;
     if (method == METHOD_POST)
     {
         //get content
@@ -596,6 +602,7 @@ int requestData::analysisRequest()
 
 void requestData::handleError(int fd, int err_num, string short_msg)
 {
+	std::cout << "handleError" << std::endl;
     char send_buff[MAX_BUFF];
     string body_buff, header_buff;
 
@@ -619,7 +626,7 @@ void requestData::handleError(int fd, int err_num, string short_msg)
 // 改用C++11
 mytimer::mytimer(requestData *_request_data, int timeout): deleted(false), request_data(_request_data)
 {
-    //cout << "mytimer()" << endl;
+    std::cout << "mytimer()" << std::endl;
     struct timeval now;
     gettimeofday(&now, NULL);
     // 以毫秒计
@@ -639,6 +646,7 @@ mytimer::~mytimer()
 
 void mytimer::update(int timeout)
 {
+	std::cout << "update()" << std::endl;
     struct timeval now;
     gettimeofday(&now, NULL);
     expired_time = ((now.tv_sec * 1000) + (now.tv_usec / 1000)) + timeout;
@@ -646,6 +654,7 @@ void mytimer::update(int timeout)
 
 bool mytimer::isvalid()
 {
+	std::cout << "isvalid()" << std::endl;
     struct timeval now;
     gettimeofday(&now, NULL);
     size_t temp = ((now.tv_sec * 1000) + (now.tv_usec / 1000));
@@ -662,22 +671,26 @@ bool mytimer::isvalid()
 
 void mytimer::clearReq()
 {
+	std::cout << "clearReq" << std::endl;
     request_data = NULL;
     this -> setDeleted();
 }
 
 void mytimer::setDeleted()
 {
+	std::cout << "setDeleted" << std::endl;
     deleted = true;
 }
 
 bool mytimer::isDeleted() const
 {
+	std::cout << "isDeleted" << std::endl;
     return deleted;
 }
 
 size_t mytimer::getExpTime() const
 {
+	std::cout << "getExpTime" << std::endl;
     return expired_time;
 }
 

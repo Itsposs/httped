@@ -4,6 +4,8 @@
 #include <signal.h>
 #include <errno.h>
 #include <string.h>
+#include <iostream>
+
 
 // 适度修改
 ssize_t readn(int fd, void *buff, size_t n)
@@ -65,8 +67,8 @@ ssize_t writen(int fd, void *buff, size_t n)
 }
 
 void handle_for_sigpipe()
-
 {
+	std::cout << "handle_for_sigpipe" << std::endl;
     struct sigaction sa;
 	// 清除信号sigemptyset()
     memset(&sa, '\0', sizeof(sa));
@@ -81,6 +83,7 @@ void handle_for_sigpipe()
 // 出错处理
 int setSocketNonBlocking(int fd)
 {
+	std::cout << "setSocketNonBlocking" << std::endl;
     int flag = fcntl(fd, F_GETFL, 0);
     if(flag == -1)
         return -1;

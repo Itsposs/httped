@@ -1,53 +1,96 @@
-
 #include "util.h"
-#include <signal.h>   // sigemptyset() sigaction()
+#include <unistd.h>
+#include <fcntl.h>
+#include <signal.h>
+
+#include <string.h> // memset()
+
+#include <iostream> // test
 
 
-void handle_for_sigpipe(void)
-{
-	struct sigaction sa;
-	// 清除信号
-	sigemptyset(&sa.sa_mask);
-	// 有信号中断时,默认忽略
-	sa.sa_handler = SIG_IGN;
-	sa.sa_flags = 0;
-	// 当类型为SOCK_STREAM的套接字已不再连接时,
-	// 进程写该套接字也产生此信号
-	if(0 == sigaction(SIGPIPE, &sa, NULL)) // ???
-		return;
-}
-
-// 设置非阻塞IO
-int set_socket_nonblock(int fd)
-{
-	int flag = 0;
-	if(-1 == (flag = fcntl(fd, F_GETFL, 0)))
-}
-
-
+// 适度修改
 ssize_t readn(int fd, void *buff, size_t n)
 {
-	size_t nleft = 0;
-	ssize_t nread = 0;
-	char *ptr = nullptr;
-	// 强制类型转换,尽量不要使用(char *)buff;
-	ptr = static_cast<char *>buff;
-	nleft = n;
+    size_t nleft = n;
+    ssize_t nread = 0;
+    ssize_t readSum = 0;
+    char *ptr = (char*)buff;
+    while (nleft > 0)
+    {
+        if ((nread = read(fd, ptr, nleft)) < 0)
+        {
+            if (errno == EINTR)
+                nread = 0;
+            else if (errno == EAGAIN)
+            {
+                return readSum;
+            }
+            else
+            {
+                return -1;
+            }  
+        }
+        else if (nread == 0)
+            break;
+        readSum += nread;
+        nleft -= nread;
+        ptr += nread;
+    }
+    return readSum;
+}
 
-	while(nleft > 0)
-	{
-		if(nread = read(fd, ptr, nleft) < 0)
-		{
-			// 信号中断函数调用,errno设为EINTR
-			if(EINTR == errno)
-				nread = 0;
-			else if(EAGIN == errno)
-				return -1;
-		}
-		else if(0 == nread)
-			break;        // EOF
-		nleft -= nread;
-		ptr += nread;
-	}
-	return (n - nleft);    // return >= 0
+ssize_t writen(int fd, void *buff, size_t n)
+{
+    size_t nleft = n;
+    ssize_t nwritten = 0;
+    ssize_t writeSum = 0;
+    char *ptr = (char*)buff;
+    while (nleft > 0)
+    {
+        if ((nwritten = write(fd, ptr, nleft)) <= 0)
+        {
+            if (nwritten < 0)
+            {
+                if (errno == EINTR || errno == EAGAIN)
+                {
+                    nwritten = 0;
+                    continue;
+                }
+                else
+                    return -1;
+            }
+        }
+        writeSum += nwritten;
+        nleft -= nwritten;
+        ptr += nwritten;
+    }
+    return writeSum;
+}
+
+void handle_for_sigpipe()
+{
+	std::cout << "handle_for_sigpipe" << std::endl;
+    struct sigaction sa;
+	// 清除信号sigemptyset()
+    memset(&sa, '\0', sizeof(sa));
+    sa.sa_handler = SIG_IGN;
+    sa.sa_flags = 0;
+	// 当类型为SOCK_STREAM的套接字已不再连接时,
+	// 进程该套接字也产生此信号
+    if(sigaction(SIGPIPE, &sa, NULL))
+        return;
+}
+
+// 出错处理
+int setSocketNonBlocking(int fd)
+{
+	std::cout << "setSocketNonBlocking" << std::endl;
+    int flag = fcntl(fd, F_GETFL, 0);
+    if(flag == -1)
+        return -1;
+
+    flag |= O_NONBLOCK;
+    if(fcntl(fd, F_SETFL, flag) == -1)
+        return -1;
+    return 0;
 }

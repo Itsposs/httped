@@ -9,6 +9,7 @@ struct epoll_event* events;
 
 int epoll_init()
 {
+	std::cout << "epoll_init" << std::endl;
     int epoll_fd = epoll_create(LISTENQ + 1);
     if(epoll_fd == -1)
         return -1;
@@ -21,6 +22,7 @@ int epoll_init()
 // 注册新描述符
 int epoll_add(int epoll_fd, int fd, void *request, __uint32_t events)
 {
+	std::cout << "epoll_add" << std::endl;
     struct epoll_event event;
     event.data.ptr = request;
     event.events = events;
@@ -65,6 +67,7 @@ int epoll_del(int epoll_fd, int fd, void *request, __uint32_t events)
 // 返回活跃事件数
 int my_epoll_wait(int epoll_fd, struct epoll_event* events, int max_events, int timeout)
 {
+	std::cout << "my_epoll_wait" << std::endl;
     int ret_count = epoll_wait(epoll_fd, events, max_events, timeout);
     if (ret_count < 0)
     {

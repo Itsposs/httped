@@ -37,6 +37,7 @@ extern priority_queue<mytimer*, deque<mytimer*>, timerCmp> myTimerQueue;
 
 int socket_bind_listen(int port)
 {
+	std::cout << "socket_bind_listen" << std::endl;
     // 检查port值，取正确区间范围
     if (port < 1024 || port > 65535)
         return -1;
@@ -76,12 +77,14 @@ int socket_bind_listen(int port)
 
 void myHandler(void *args)
 {
+	std::cout << "myHandler"  << std::endl;
     requestData *req_data = (requestData*)args;
     req_data -> handleRequest();
 }
 
 void acceptConnection(int listen_fd, int epoll_fd, const string &path)
 {
+	std::cout << "acceptConnection" << std::endl;
     struct sockaddr_in client_addr;
     memset(&client_addr, 0, sizeof(struct sockaddr_in));
     socklen_t client_addr_len = 0;
@@ -129,16 +132,16 @@ void acceptConnection(int listen_fd, int epoll_fd, const string &path)
 // 分发处理函数
 void handle_events(int epoll_fd, int listen_fd, struct epoll_event* events, int events_num, const string &path, threadpool_t* tp)
 {
+	std::cout << "handle_events" << std::endl;		
     for(int i = 0; i < events_num; i++)
     {
         // 获取有事件产生的描述符
         requestData* request = (requestData*)(events[i].data.ptr);
         int fd = request -> getFd();
-
         // 有事件发生的描述符为监听描述符
         if(fd == listen_fd)
         {
-            cout << "This is listen_fd" << endl;
+            //cout << "This is listen_fd" << endl;
 			// 接受连接
             acceptConnection(listen_fd, epoll_fd, path);
         }
@@ -156,8 +159,8 @@ void handle_events(int epoll_fd, int listen_fd, struct epoll_event* events, int 
             // 将请求任务加入到线程池中
             // 加入线程池之前将Timer和request分离
             request -> seperateTimer();
-            int rc = threadpool_add(tp, myHandler, events[i].data.ptr, 0);
-			std::cout << "rc:" << rc << std::endl;
+            threadpool_add(tp, myHandler, events[i].data.ptr, 0);
+			//std::cout << "rc:" << rc << std::endl;
         }
     }
 }
@@ -178,6 +181,7 @@ void handle_events(int epoll_fd, int listen_fd, struct epoll_event* events, int 
 
 void handle_expired_event()
 {
+	std::cout << "handle_expired_event" << std::endl;
     pthread_mutex_lock(&qlock);
     while (!myTimerQueue.empty())
     {
@@ -205,7 +209,6 @@ int main(int argc, char *argv[])
     int epoll_fd = epoll_init();
 	// 可以改用C++11 static_assert()
 	assert(epoll_fd > 0);
-	std::cout << "epoll_fd:" << epoll_fd << std::endl;
 
 	// 创建线程池
     threadpool_t *threadpool = threadpool_create(THREADPOOL_THREAD_NUM, QUEUE_SIZE, 0);
@@ -237,7 +240,7 @@ int main(int argc, char *argv[])
         //printf("%zu\n", myTimerQueue.size());        
         if (events_num == 0)
             continue;
-        printf("%d\n", events_num);
+        //printf("%d\n", events_num);
         //printf("%zu\n", myTimerQueue.size());    
         // else
         //     cout << "one connection has come!" << endl;
