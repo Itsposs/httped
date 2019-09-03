@@ -135,7 +135,6 @@ int main(int argc, char *argv[])
 	std::shared_ptr<RequestData> request(new RequestData());
 	request -> setFd(listen_fd);
 	
-	//__uint32_t events = EPOLLIN | EPOLLET;
 	if(Epoll::epoll_add(listen_fd, request, EPOLLIN | EPOLLET) < 0)
 	{
 		perror("epoll add error");
