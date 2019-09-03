@@ -1,5 +1,5 @@
-#ifndef THREADPOOL
-#define THREADPOOL
+#ifndef _THREADPOOL_H_
+#define _THREADPOOL_H
 
 
 #include "requestdata.h"
@@ -71,4 +71,5 @@ int threadpool_add(threadpool_t *pool, void (*function)(void *), void *argument,
 int threadpool_destroy(threadpool_t *pool, int flags);
 int threadpool_free(threadpool_t *pool);
 
-#endif
+#endif // _THREADPOOL_H
+

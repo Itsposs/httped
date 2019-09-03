@@ -106,7 +106,7 @@ void acceptConnection(int listen_fd, int epoll_fd, const string &path)
 		std::cout << "client addr:" << client_addr.sin_addr.s_addr << std::endl;
 
         // 设为非阻塞模式
-        int ret = setSocketNonBlocking(accept_fd);
+        int ret = set_socket_nonblocking(accept_fd);
         if (ret < 0)
         {
             perror("Set non block failed!");
@@ -223,7 +223,7 @@ int main(int argc, char *argv[])
         perror("socket bind failed");
         return 1;
     }
-    if (setSocketNonBlocking(listen_fd) < 0)
+    if (set_socket_nonblocking(listen_fd) < 0)
     {
         perror("set socket non block failed");
         return 1;

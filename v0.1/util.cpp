@@ -81,7 +81,7 @@ void handle_for_sigpipe()
 }
 
 // 出错处理
-int setSocketNonBlocking(int fd)
+int set_socket_nonblocking(int fd)
 {
 	std::cout << "setSocketNonBlocking" << std::endl;
     int flag = fcntl(fd, F_GETFL, 0);

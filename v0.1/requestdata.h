@@ -1,5 +1,5 @@
-#ifndef REQUESTDATA
-#define REQUESTDATA
+#ifndef _REQUESTDATA_H
+#define _REQUESTDATA_H
 
 #include <string>
 #include <unordered_map>
@@ -126,4 +126,5 @@ struct timerCmp
 };
 
 
-#endif
+#endif //_REQUESTDATA_H
+
