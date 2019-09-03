@@ -89,8 +89,10 @@ void acceptConnection(int listen_fd, int epoll_fd, const string &path)
     memset(&client_addr, 0, sizeof(struct sockaddr_in));
     socklen_t client_addr_len = 0;
     int accept_fd = 0;
-
-    while((accept_fd = accept(listen_fd, (struct sockaddr*)&client_addr, &client_addr_len)) > 0)
+	std::cout << "epoll_fd: " << epoll_fd << std::endl;
+	accept_fd = accept(listen_fd, (struct sockaddr*)&client_addr, &client_addr_len);
+	std::cout << "accept_fd: " << accept_fd << std::endl;
+	while(false)
     {
         /*
         // TCP的保活机制默认是关闭的
@@ -132,7 +134,7 @@ void acceptConnection(int listen_fd, int epoll_fd, const string &path)
 // 分发处理函数
 void handle_events(int epoll_fd, int listen_fd, struct epoll_event* events, int events_num, const string &path, threadpool_t* tp)
 {
-	std::cout << "handle_events" << std::endl;		
+	//std::cout << "handle_events" << std::endl;		
     for(int i = 0; i < events_num; i++)
     {
         // 获取有事件产生的描述符
@@ -141,7 +143,7 @@ void handle_events(int epoll_fd, int listen_fd, struct epoll_event* events, int 
         // 有事件发生的描述符为监听描述符
         if(fd == listen_fd)
         {
-            //cout << "This is listen_fd" << endl;
+            cout << "This is listen_fd" << endl;
 			// 接受连接
             acceptConnection(listen_fd, epoll_fd, path);
         }
@@ -207,7 +209,7 @@ int main(int argc, char *argv[])
 {
     handle_for_sigpipe();
     int epoll_fd = epoll_init();
-	// 可以改用C++11 static_assert()
+	
 	assert(epoll_fd > 0);
 
 	// 创建线程池

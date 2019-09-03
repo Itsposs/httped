@@ -15,6 +15,9 @@ int epoll_init()
 	return epoll_fd;
 }
 
+// test
+#include <iostream>
+
 int epoll_add(int epoll_fd, int fd, void * request, __uint32_t events)
 {
 	struct epoll_event event;
@@ -22,7 +25,11 @@ int epoll_add(int epoll_fd, int fd, void * request, __uint32_t events)
 	event.events = events;
 
 	if(::epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &event) < 0)
+	{
+		std::cout << "epoll_fd error!" << std::endl;
 		return -1;
+	}
+	std::cout << "epoll_add ok!" << std::endl;
 	return 0;
 }
 

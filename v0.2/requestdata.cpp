@@ -30,11 +30,11 @@
 #include <unistd.h>  // close()
 #include <algorithm>
 #include <pthread.h>
-#include "requestData.h"
+#include "requestdata.h"
 
 // opencv
 //#include <opencv/cv.h>
-#include <opencv2/opencv.hpp>
+//#include <opencv2/opencv.hpp>
 
 
 // requestData
@@ -563,9 +563,9 @@ int requestData::analysisRequest()
 			return ANALYSIS_ERROR;
 
 		// image
-		std::vector<char> data(content.begin(), content.end());
-		cv::Mat test = cv::imdecode(data, CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR);
-		cv::imwrite("receive.bmp", test);
+		//std::vector<char> data(content.begin(), content.end());
+		//cv::Mat test = cv::imdecode(data, CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR);
+		//cv::imwrite("receive.bmp", test);
 		return ANALYSIS_SUCCESS;
 
 	}

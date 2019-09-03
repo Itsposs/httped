@@ -1,0 +1,175 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+AGAIN_MAX_TIMES	requestData.cpp	/^const int AGAIN_MAX_TIMES = 200;$/;"	v
+ANALYSIS_ERROR	requestData.cpp	/^const int ANALYSIS_ERROR = -2;$/;"	v
+ANALYSIS_SUCCESS	requestData.cpp	/^const int ANALYSIS_SUCCESS = 0;$/;"	v
+CC	Makefile	/^CC      := g++$/;"	m
+CFLAGS	Makefile	/^CFLAGS  := -std=c++11 -g -Wall -O3 $(INCLUDE)$/;"	m
+CXXFLAGS	Makefile	/^CXXFLAGS:= $(CFLAGS)$/;"	m
+EPOLL_WAIT_TIME	requestData.cpp	/^const int EPOLL_WAIT_TIME = 500;$/;"	v
+Epoll	epoll.h	/^class Epoll$/;"	c
+HTTP_10	requestData.cpp	/^const int HTTP_10 = 1;$/;"	v
+HTTP_11	requestData.cpp	/^const int HTTP_11 = 2;$/;"	v
+HTTPversion	requestData.h	/^		int HTTPversion;$/;"	m	struct:requestData
+HeadersState	requestData.h	/^enum HeadersState$/;"	g
+INCLUDE	Makefile	/^INCLUDE:= -I.\/usr\/local\/include\/opencv$/;"	m
+LIBS	Makefile	/^LIBS    := -lpthread -lopencv_core -lopencv_imgproc -lopencv_highgui$/;"	m
+LISTENQ	main.cpp	/^const int LISTENQ = 1024;$/;"	v
+MAXEVENTS	main.cpp	/^const int MAXEVENTS = 5000;$/;"	v
+MAX_BUFF	requestData.cpp	/^const int MAX_BUFF = 4096;$/;"	v
+MAX_QUEUE	threadpool.cpp	/^const int MAX_QUEUE = 65535;$/;"	v
+MAX_THREADS	threadpool.cpp	/^const int MAX_THREADS = 1024;$/;"	v
+METHOD_GET	requestData.cpp	/^const int METHOD_GET  = 2;$/;"	v
+METHOD_POST	requestData.cpp	/^const int METHOD_POST = 1;$/;"	v
+MimeType	requestData.h	/^class MimeType$/;"	c
+MutexLockGuard	requestData.cpp	/^MutexLockGuard::MutexLockGuard()$/;"	f	class:MutexLockGuard
+MutexLockGuard	requestData.h	/^class MutexLockGuard$/;"	c
+OBJS	Makefile	/^OBJS    := $(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(SOURCE)))$/;"	m
+PARSE_HEADER_AGAIN	requestData.cpp	/^const int PARSE_HEADER_AGAIN = -1;$/;"	v
+PARSE_HEADER_ERROR	requestData.cpp	/^const int PARSE_HEADER_ERROR = -1;$/;"	v
+PARSE_HEADER_SUCCESSS	requestData.cpp	/^const int PARSE_HEADER_SUCCESSS = 0;$/;"	v
+PARSE_URI_AGAIN	requestData.cpp	/^const int PARSE_URI_AGAIN = -1;$/;"	v
+PARSE_URI_ERROR	requestData.cpp	/^const int PARSE_URI_ERROR = -2;$/;"	v
+PARSE_URI_SUCCESS	requestData.cpp	/^const int PARSE_URI_SUCCESS = 0;$/;"	v
+PATH	epoll.cpp	/^const std::string Epoll::PATH = "\/";$/;"	m	class:Epoll	file:
+PATH	epoll.h	/^		static const std::string PATH;$/;"	m	class:Epoll
+PATH	main.cpp	/^const std::string PATH = "\/";$/;"	v
+PORT	main.cpp	/^const int PORT = 8888; $/;"	v
+QUEUE_SIZE	main.cpp	/^const int QUEUE_SIZE = 65535;$/;"	v
+SOURCE	Makefile	/^SOURCE  := $(wildcard *.cpp)$/;"	m
+STATE_ANALYSIS	requestData.cpp	/^const int STATE_ANALYSIS = 4;$/;"	v
+STATE_FINISH	requestData.cpp	/^const int STATE_FINISH = 5;$/;"	v
+STATE_PARSE_HEADERS	requestData.cpp	/^const int STATE_PARSE_HEADERS = 2;$/;"	v
+STATE_PARSE_URI	requestData.cpp	/^const int STATE_PARSE_URI = 1;$/;"	v
+STATE_RECV_BODY	requestData.cpp	/^const int STATE_RECV_BODY = 3;$/;"	v
+TARGET	Makefile	/^TARGET  := myserver$/;"	m
+THREADPOOL_GRACEFUL	threadpool.cpp	/^const int THREADPOOL_GRACEFUL = 1;$/;"	v
+THREADPOOL_INVALID	threadpool.cpp	/^const int THREADPOOL_INVALID = -1;$/;"	v
+THREADPOOL_LOCK_FAILURE	threadpool.cpp	/^const int THREADPOOL_LOCK_FAILURE = -2;$/;"	v
+THREADPOOL_QUEUE_FULL	threadpool.cpp	/^const int THREADPOOL_QUEUE_FULL = -3;$/;"	v
+THREADPOOL_SHUTDOWN	threadpool.cpp	/^const int THREADPOOL_SHUTDOWN = -4;$/;"	v
+THREADPOOL_THREAD_FAILURE	threadpool.cpp	/^const int THREADPOOL_THREAD_FAILURE = -5;$/;"	v
+THREADPOOL_THREAD_NUM	main.cpp	/^const int THREADPOOL_THREAD_NUM = 4;$/;"	v
+TIMER_TIME_OUT	epoll.cpp	/^const int TIMER_TIME_OUT = 500;$/;"	v
+TIMER_TIME_OUT	main.cpp	/^const int TIMER_TIME_OUT = 500;$/;"	v
+ThreadPool	threadpool.h	/^class ThreadPool$/;"	c
+ThreadPoolTask	threadpool.h	/^struct ThreadPoolTask$/;"	s
+_EPOLL_H_	epoll.h	4;"	d
+_REQUESTDATA_H_	requestData.h	3;"	d
+_THREADPOOL_H_	threadpool.h	4;"	d
+_UTIL_H_	util.h	3;"	d
+acceptConnection	epoll.cpp	/^void Epoll::acceptConnection(int listen_fd, int epoll_fd, const std::string path)$/;"	f	class:Epoll
+addTimer	requestData.cpp	/^void requestData::addTimer(std::shared_ptr<mytimer>mtimer)$/;"	f	class:requestData
+againTimes	requestData.h	/^		int againTimes;$/;"	m	struct:requestData
+analysisRequest	requestData.cpp	/^int requestData::analysisRequest()$/;"	f	class:requestData
+args	threadpool.h	/^	std::shared_ptr<void> args;$/;"	m	struct:ThreadPoolTask
+clearReq	requestData.cpp	/^void mytimer::clearReq()$/;"	f	class:mytimer
+content	requestData.h	/^		std::string content;$/;"	m	struct:requestData
+count	threadpool.cpp	/^int ThreadPool::count = 0;$/;"	m	class:ThreadPool	file:
+count	threadpool.h	/^		static int count;$/;"	m	class:ThreadPool
+deleted	requestData.h	/^	bool deleted;$/;"	m	struct:mytimer
+epoll_add	epoll.cpp	/^int Epoll::epoll_add(int fd, std::shared_ptr<requestData> request, __uint32_t events)$/;"	f	class:Epoll
+epoll_del	epoll.cpp	/^int Epoll::epoll_del(int fd, __uint32_t events)$/;"	f	class:Epoll
+epoll_fd	epoll.cpp	/^int Epoll::epoll_fd = 0;$/;"	m	class:Epoll	file:
+epoll_fd	epoll.h	/^		static int epoll_fd;$/;"	m	class:Epoll
+epoll_init	epoll.cpp	/^int Epoll::epoll_init(int maxevents, int listen_num)$/;"	f	class:Epoll
+epoll_mod	epoll.cpp	/^int Epoll::epoll_mod(int fd, std::shared_ptr<requestData> request, __uint32_t events)$/;"	f	class:Epoll
+epollfd	requestData.h	/^		int epollfd;$/;"	m	struct:requestData
+events	epoll.cpp	/^epoll_event * Epoll::events;$/;"	m	class:Epoll	file:
+events	epoll.h	/^		static epoll_event  *events;$/;"	m	class:Epoll
+expired_time	requestData.h	/^	size_t expired_time;$/;"	m	struct:mytimer
+fd	requestData.h	/^		int fd;$/;"	m	struct:requestData
+fd2req	epoll.cpp	/^std::unordered_map<int, std::shared_ptr<requestData>> Epoll::fd2req;$/;"	m	class:Epoll	file:
+fd2req	epoll.h	/^		static std::unordered_map<int, std::shared_ptr<requestData>> fd2req;$/;"	m	class:Epoll
+file_name	requestData.h	/^		std::string file_name;$/;"	m	struct:requestData
+fun	threadpool.h	/^	std::function<void(std::shared_ptr<void>)> fun;$/;"	m	struct:ThreadPoolTask
+getEventsRequest	epoll.cpp	/^std::vector<std::shared_ptr<requestData>> Epoll::getEventsRequest(int listen_fd, int events_num, const std::string path)$/;"	f	class:Epoll
+getExpTime	requestData.cpp	/^size_t mytimer::getExpTime() const$/;"	f	class:mytimer
+getFd	requestData.cpp	/^int requestData::getFd()$/;"	f	class:requestData
+getMime	requestData.cpp	/^std::string MimeType::getMime(const std::string &suffix)$/;"	f	class:MimeType
+graceful_shutdown	threadpool.h	/^	graceful_shutdown = 2$/;"	e	enum:__anon1
+h_CR	requestData.h	/^	h_CR,$/;"	e	enum:HeadersState
+h_LF	requestData.h	/^	h_LF,$/;"	e	enum:HeadersState
+h_colon	requestData.h	/^	h_colon,$/;"	e	enum:HeadersState
+h_end_CR	requestData.h	/^	h_end_CR,$/;"	e	enum:HeadersState
+h_end_LF	requestData.h	/^	h_end_LF$/;"	e	enum:HeadersState
+h_key	requestData.h	/^	h_key,$/;"	e	enum:HeadersState
+h_spaces_after_colon	requestData.h	/^	h_spaces_after_colon,$/;"	e	enum:HeadersState
+h_start	requestData.h	/^	h_start = 0,$/;"	e	enum:HeadersState
+h_state	requestData.h	/^		int h_state;$/;"	m	struct:requestData
+h_value	requestData.h	/^	h_value,$/;"	e	enum:HeadersState
+handleError	requestData.cpp	/^void requestData::handleError(int fd, int err_num, std::string short_msg)$/;"	f	class:requestData
+handleRequest	requestData.cpp	/^void requestData::handleRequest()$/;"	f	class:requestData
+handle_expired_event	main.cpp	/^void handle_expired_event()$/;"	f
+handle_for_sigpipe	util.cpp	/^void handle_for_sigpipe()$/;"	f
+head	threadpool.cpp	/^int ThreadPool::head = 0;$/;"	m	class:ThreadPool	file:
+head	threadpool.h	/^		static int head;$/;"	m	class:ThreadPool
+headers	requestData.h	/^		std::unordered_map<std::string, std::string> headers;$/;"	m	struct:requestData
+immediate_shutdown	threadpool.h	/^	immediate_shutdown = 1,$/;"	e	enum:__anon1
+isDeleted	requestData.cpp	/^bool mytimer::isDeleted() const$/;"	f	class:mytimer
+isfinish	requestData.h	/^		bool isfinish;$/;"	m	struct:requestData
+isvalid	requestData.cpp	/^bool mytimer::isvalid()$/;"	f	class:mytimer
+keep_alive	requestData.h	/^		bool keep_alive;$/;"	m	struct:requestData
+lock	requestData.cpp	/^pthread_mutex_t MimeType::lock = PTHREAD_MUTEX_INITIALIZER;$/;"	m	class:MimeType	file:
+lock	requestData.cpp	/^pthread_mutex_t MutexLockGuard::lock = PTHREAD_MUTEX_INITIALIZER;$/;"	m	class:MutexLockGuard	file:
+lock	requestData.h	/^		static pthread_mutex_t lock;$/;"	m	class:MimeType
+lock	requestData.h	/^		static pthread_mutex_t lock;$/;"	m	class:MutexLockGuard
+lock	threadpool.cpp	/^pthread_mutex_t ThreadPool::lock = PTHREAD_MUTEX_INITIALIZER;$/;"	m	class:ThreadPool	file:
+lock	threadpool.h	/^		static pthread_mutex_t lock;$/;"	m	class:ThreadPool
+main	main.cpp	/^int main(int argc, char *argv[])$/;"	f
+method	requestData.h	/^		int method;$/;"	m	struct:requestData
+mime	requestData.cpp	/^std::unordered_map<std::string, std::string> MimeType::mime;$/;"	m	class:MimeType	file:
+mime	requestData.h	/^		static std::unordered_map<std::string, std::string> mime;$/;"	m	class:MimeType
+myHandler	threadpool.cpp	/^void myHandler(std::shared_ptr<void> req)$/;"	f
+myTimerQueue	requestData.cpp	/^std::priority_queue<std::shared_ptr<mytimer>, std::deque<std::shared_ptr<mytimer>>, timerCmp> myTimerQueue;  $/;"	v
+my_epoll_wait	epoll.cpp	/^void Epoll::my_epoll_wait(int listen_fd, int max_events, int timeout)$/;"	f	class:Epoll
+mytimer	requestData.cpp	/^mytimer::mytimer(std::shared_ptr<requestData>_request_data, int timeout) $/;"	f	class:mytimer
+mytimer	requestData.h	/^struct mytimer$/;"	s
+notify	threadpool.cpp	/^pthread_cond_t  ThreadPool::notify = PTHREAD_COND_INITIALIZER;$/;"	m	class:ThreadPool	file:
+notify	threadpool.h	/^		static pthread_cond_t notify;$/;"	m	class:ThreadPool
+now_read_pos	requestData.h	/^		int now_read_pos;$/;"	m	struct:requestData
+operator ()	requestData.cpp	/^bool timerCmp::operator()(std::shared_ptr<mytimer> &lhs, std::shared_ptr<mytimer> &rhs) const$/;"	f	class:timerCmp
+parse_Headers	requestData.cpp	/^int requestData::parse_Headers()$/;"	f	class:requestData
+parse_URI	requestData.cpp	/^int requestData::parse_URI()$/;"	f	class:requestData
+path	requestData.h	/^		std::string path;$/;"	m	struct:requestData
+queue	threadpool.cpp	/^std::vector<ThreadPoolTask> ThreadPool::queue;$/;"	m	class:ThreadPool	file:
+queue	threadpool.h	/^		static std::vector<ThreadPoolTask> queue;$/;"	m	class:ThreadPool
+queue_size	threadpool.cpp	/^int ThreadPool::queue_size = 0;$/;"	m	class:ThreadPool	file:
+queue_size	threadpool.h	/^		static int queue_size;$/;"	m	class:ThreadPool
+readn	util.cpp	/^ssize_t readn(int fd, void *buff, size_t n)$/;"	f
+requestData	requestData.cpp	/^requestData::requestData() :$/;"	f	class:requestData
+requestData	requestData.cpp	/^requestData::requestData(std::string _path, int _fd, int _epollfd) :$/;"	f	class:requestData
+requestData	requestData.h	/^struct requestData : public std::enable_shared_from_this<requestData>$/;"	s
+request_data	requestData.h	/^	std::shared_ptr<requestData> request_data;$/;"	m	struct:mytimer
+reset	requestData.cpp	/^void requestData::reset()$/;"	f	class:requestData
+seperateTimer	requestData.cpp	/^void requestData::seperateTimer()$/;"	f	class:requestData
+setDeleted	requestData.cpp	/^void mytimer::setDeleted()$/;"	f	class:mytimer
+setFd	requestData.cpp	/^void requestData::setFd(int _fd)$/;"	f	class:requestData
+setSocketNonBlocking	util.cpp	/^int setSocketNonBlocking(int fd)$/;"	f
+shutdown	threadpool.cpp	/^int ThreadPool::shutdown = 0;$/;"	m	class:ThreadPool	file:
+shutdown	threadpool.h	/^		static int shutdown;$/;"	m	class:ThreadPool
+socket_bind_listen	main.cpp	/^int socket_bind_listen(int port)$/;"	f
+started	threadpool.cpp	/^int ThreadPool::started = 0;$/;"	m	class:ThreadPool	file:
+started	threadpool.h	/^		static int started;$/;"	m	class:ThreadPool
+state	requestData.h	/^		int state;$/;"	m	struct:requestData
+tail	threadpool.cpp	/^int ThreadPool::tail = 0;$/;"	m	class:ThreadPool	file:
+tail	threadpool.h	/^		static int tail;$/;"	m	class:ThreadPool
+thread_count	threadpool.cpp	/^int ThreadPool::thread_count = 0;$/;"	m	class:ThreadPool	file:
+thread_count	threadpool.h	/^		static int thread_count;$/;"	m	class:ThreadPool
+threadpool_add	threadpool.cpp	/^int ThreadPool::threadpool_add(std::shared_ptr<void> args, std::function<void(std::shared_ptr<void>)> fun)$/;"	f	class:ThreadPool
+threadpool_create	threadpool.cpp	/^int ThreadPool::threadpool_create(int _thread_count, int _queue_size)$/;"	f	class:ThreadPool
+threadpool_shutdown_t	threadpool.h	/^}threadpool_shutdown_t;$/;"	t	typeref:enum:__anon1
+threadpool_thread	threadpool.cpp	/^void * ThreadPool::threadpool_thread(void *args)$/;"	f	class:ThreadPool
+threads	threadpool.cpp	/^std::vector<pthread_t> ThreadPool::threads;$/;"	m	class:ThreadPool	file:
+threads	threadpool.h	/^		static std::vector<pthread_t> threads;$/;"	m	class:ThreadPool
+timer	requestData.h	/^		std::weak_ptr<mytimer> timer;$/;"	m	struct:requestData
+timerCmp	requestData.h	/^struct timerCmp$/;"	s
+update	requestData.cpp	/^void mytimer::update(int timeout)$/;"	f	class:mytimer
+writen	util.cpp	/^ssize_t writen(int fd, void *buff, size_t n)$/;"	f
+~MutexLockGuard	requestData.cpp	/^MutexLockGuard::~MutexLockGuard()$/;"	f	class:MutexLockGuard
+~mytimer	requestData.cpp	/^mytimer::~mytimer()$/;"	f	class:mytimer
+~requestData	requestData.cpp	/^requestData::~requestData()$/;"	f	class:requestData

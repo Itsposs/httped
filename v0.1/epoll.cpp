@@ -1,8 +1,8 @@
 #include "epoll.h"
-#include <sys/epoll.h>
 #include <errno.h>
-#include "threadpool.h"
 #include <iostream>
+#include <sys/epoll.h>
+#include "threadpool.h"
 
 
 struct epoll_event* events;
@@ -13,7 +13,6 @@ int epoll_init()
     int epoll_fd = epoll_create(LISTENQ + 1);
     if(epoll_fd == -1)
         return -1;
-    //events = (struct epoll_event*)malloc(sizeof(struct epoll_event) * MAXEVENTS);
 	// 动态分配内存可以用全局变量
     events = new epoll_event[MAXEVENTS];
     return epoll_fd;
@@ -22,11 +21,9 @@ int epoll_init()
 // 注册新描述符
 int epoll_add(int epoll_fd, int fd, void *request, __uint32_t events)
 {
-	std::cout << "epoll_add" << std::endl;
     struct epoll_event event;
     event.data.ptr = request;
     event.events = events;
-	//std::cout << "fd:" << fd << std::endl;
 
     if(epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &event) < 0)
     {

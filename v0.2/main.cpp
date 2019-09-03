@@ -1,6 +1,7 @@
 #include "util.h"
 #include "epoll.h"
 
+#include <assert.h>
 
 #include <string.h> // memset()
 
@@ -17,14 +18,14 @@
 #include <queue>  // priorty_queue
 #include <string>  // string
 #include "threadpool.h"
-#include "requestData.h"
+#include "requestdata.h"
 
 // test
 #include <iostream>
 
 
 // port
-const int PORT = 8888; 
+const int PORT = 8000 ; 
 
 // threadpool
 const int QUEUE_SIZE = 65535;
@@ -59,7 +60,12 @@ int socket_bind_listen(int port)
 
 	if(::bind(listen_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1)
 		return -1;
-	// error
+	
+	// 开始监听,最大等待队列长度为SOMAXCONN
+	if(::listen(listen_fd, SOMAXCONN) == -1)
+		return -1;
+	
+	// 无效监听描述符
 	if(listen_fd == -1)
 	{
 		::close(listen_fd);
@@ -76,13 +82,15 @@ void myHandler(void *args)
 
 void acceptConnection(int listen_fd, int epoll_fd, const std::string &path)
 {
+	std::cout << "come in acceptConnection" << std::endl;
 	struct sockaddr_in client_addr;
 	::memset(&client_addr, 0, sizeof(struct sockaddr_in));
 	socklen_t client_addr_len = 0;
 	int accept_fd = 0;
-
+	std::cout << "epoll_fd:" << epoll_fd <<  std::endl;	
 	while((accept_fd = ::accept(listen_fd, (struct sockaddr *)&client_addr, &client_addr_len)) > 0)
 	{
+		std::cout << "accept" << std::endl;
 		// nonblock
 		int ret = ::setSocketNonBlocking(accept_fd);
 		if(ret < 0)
@@ -92,6 +100,8 @@ void acceptConnection(int listen_fd, int epoll_fd, const std::string &path)
 
 		__uint32_t _epo_event = EPOLLIN | EPOLLET | EPOLLONESHOT;
 		::epoll_add(epoll_fd, accept_fd, static_cast<void *>(req_info), _epo_event);
+		
+		std::cout << " add time" << std::endl;
 
 		// add time
 		mytimer *mtimer = new mytimer(req_info, TIMER_TIME_OUT);
@@ -113,7 +123,10 @@ void handle_events(int epoll_fd, int listen_fd, struct epoll_event *events, int 
 
 		// 监听描述符
 		if(fd == listen_fd)
+		{
+			std::cout << "this is a listen_fd" << std::endl;
 			::acceptConnection(listen_fd, epoll_fd, path);
+		}
 		else
 		{
 			// error
@@ -170,11 +183,7 @@ int main(int argc, char *argv[])
 {
 	handle_for_sigpipe();
 	int epoll_fd = epoll_init();
-	if(epoll_fd < 0)
-	{
-		perror("epoll init failed");
-		return 1;
-	}
+	assert(epoll_fd > 0);
 
 	threadpool_t *threadpool = threadpool_create(THREADPOOL_THREAD_NUM, QUEUE_SIZE, 0);
 	int listen_fd = socket_bind_listen(PORT);
@@ -197,6 +206,7 @@ int main(int argc, char *argv[])
 	while(true)
 	{
 		int events_num = ::my_epoll_wait(epoll_fd, events, MAXEVENTS, -1);
+		std::cout << "events_num:" << events_num << std::endl;
 		if(events_num == 0)
 			continue;
 		handle_events(epoll_fd, listen_fd, events, events_num, PATH, threadpool);

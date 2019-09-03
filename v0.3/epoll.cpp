@@ -6,7 +6,7 @@
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include "threadpool.h"
-#include "requestData.h"
+#include "requestdata.h"
 
 const int TIMER_TIME_OUT = 500;
 
@@ -19,27 +19,33 @@ extern std::priority_queue<std::shared_ptr<mytimer>, std::deque<std::shared_ptr<
 
 int Epoll::epoll_init(int maxevents, int listen_num)
 {
-	int epoll_fd = ::epoll_create(listen_num + 1);
+	epoll_fd = ::epoll_create(listen_num + 1);
 	if(epoll_fd == -1)
 		return -1;
 	events = new epoll_event[maxevents];
 	return 0;
 }
 
+// test
+#include <iostream>
 
 int Epoll::epoll_add(int fd, std::shared_ptr<requestData> request, __uint32_t events)
 {
 	struct epoll_event event;
 	event.data.fd = fd;
 	event.events = events;
-
+	
+	
 	if(::epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &event) < 0)
+	{
+		perror("epoll_add error");
 		return -1;
+	}
 	fd2req[fd] = request;
 	return 0;
 }
 
-int Epoll::epoll_mod(int fd, std::shared_ptr<requestData> request, __uint32_t events)
+int Epoll::epoll_mod(int fd, std::shared_ptr<requestData> request, uint32_t events)
 {
 	struct epoll_event event;
 	event.data.fd = fd;
@@ -51,7 +57,7 @@ int Epoll::epoll_mod(int fd, std::shared_ptr<requestData> request, __uint32_t ev
 	return 0;
 }
 
-int Epoll::epoll_del(int fd, __uint32_t events)
+int Epoll::epoll_del(int fd, uint32_t events)
 {
 	struct epoll_event event;
 	event.data.fd = fd;
@@ -164,20 +170,5 @@ std::vector<std::shared_ptr<requestData>> Epoll::getEventsRequest(int listen_fd,
 	}
 	return req_data;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

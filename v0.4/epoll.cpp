@@ -19,7 +19,7 @@ TimerManager Epoll::timer_manager;
 
 int Epoll::epoll_init(int maxevents, int listen_num)
 {
-	int epoll_fd = ::epoll_create(listen_num + 1);
+	epoll_fd = ::epoll_create(listen_num + 1);
 	if(epoll_fd == -1)
 		return -1;
 	events = new epoll_event[maxevents];

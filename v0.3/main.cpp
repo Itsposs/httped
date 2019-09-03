@@ -17,7 +17,7 @@
 #include <queue>  // priorty_queue
 #include <string>  // string
 #include "threadpool.h"
-#include "requestData.h"
+#include "requestdata.h"
 
 // test
 #include <iostream>
@@ -25,8 +25,8 @@
 
 // port
 const int PORT = 8888; 
-
 const int LISTENQ = 1024;
+
 const int MAXEVENTS = 5000;
 
 
@@ -58,11 +58,15 @@ int socket_bind_listen(int port)
 	::bzero((char *)&server_addr, sizeof(server_addr));
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr = ::htonl(INADDR_ANY);
-	server_addr.sin_port = htons(port);
+	server_addr.sin_port = htons((unsigned short)port);
 
 	if(::bind(listen_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1)
 		return -1;
-	// error
+	
+	// 开始监听,最大等待队列长为SOMAXCONN
+	if(::listen(listen_fd, LISTENQ) == -1)
+		return -1;
+	// 无效监听描述符
 	if(listen_fd == -1)
 	{
 		::close(listen_fd);
@@ -92,12 +96,10 @@ void handle_expired_event()
 		if(ptimer_now -> isDeleted())
 		{
 			myTimerQueue.pop();
-			//delete ptimer_now;
 		}
 		else if(ptimer_now -> isvalid() == false)
 		{
 			myTimerQueue.top();
-			//delete ptimer_now;
 		}
 		else
 			break;
@@ -116,6 +118,7 @@ int main(int argc, char *argv[])
 	if(ThreadPool::threadpool_create(THREADPOOL_THREAD_NUM, QUEUE_SIZE) < 0)
 	{
 		perror("Threadpool create failed");
+		return 1;
 	}
 	int listen_fd = socket_bind_listen(PORT);
 	if(listen_fd < 0)
@@ -131,7 +134,8 @@ int main(int argc, char *argv[])
 
 	std::shared_ptr<requestData> request(new requestData());
 	request -> setFd(listen_fd);
-
+	
+	//__uint32_t events = EPOLLIN | EPOLLET;
 	if(Epoll::epoll_add(listen_fd, request, EPOLLIN | EPOLLET) < 0)
 	{
 		perror("epoll add error");
