@@ -1,0 +1,158 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+AGAIN_MAX_TIMES	requestdata.cpp	/^const int AGAIN_MAX_TIMES = 200;$/;"	v
+ANALYSIS_ERROR	requestdata.cpp	/^const int ANALYSIS_ERROR = -2;$/;"	v
+ANALYSIS_SUCCESS	requestdata.cpp	/^const int ANALYSIS_SUCCESS = 0;$/;"	v
+CC	Makefile	/^CC      := g++$/;"	m
+CFLAGS	Makefile	/^CFLAGS  := -std=c++11 -g -Wall -O3 $(INCLUDE)$/;"	m
+CXXFLAGS	Makefile	/^CXXFLAGS:= $(CFLAGS)$/;"	m
+EPOLL_WAIT_TIME	requestdata.cpp	/^const int EPOLL_WAIT_TIME = 500;$/;"	v
+HTTP_10	requestdata.cpp	/^const int HTTP_10 = 1;$/;"	v
+HTTP_11	requestdata.cpp	/^const int HTTP_11 = 2;$/;"	v
+HTTPversion	requestdata.h	/^		int HTTPversion;$/;"	m	struct:requestData
+HeadersState	requestdata.h	/^enum HeadersState$/;"	g
+INCLUDE	Makefile	/^INCLUDE:= -I.\/usr\/local\/include\/opencv$/;"	m
+LIBS	Makefile	/^LIBS    := -lpthread -lopencv_core -lopencv_imgproc -lopencv_highgui$/;"	m
+LISTENQ	epoll.h	/^const int LISTENQ = 1024;$/;"	v
+MAXEVENTS	epoll.h	/^const int MAXEVENTS = 5000;$/;"	v
+MAX_BUFF	requestdata.cpp	/^const int MAX_BUFF = 4096;$/;"	v
+MAX_QUEUE	threadpool.cpp	/^const int MAX_QUEUE = 65535;$/;"	v
+MAX_THREADS	threadpool.cpp	/^const int MAX_THREADS = 1024;$/;"	v
+METHOD_GET	requestdata.cpp	/^const int METHOD_GET  = 2;$/;"	v
+METHOD_POST	requestdata.cpp	/^const int METHOD_POST = 1;$/;"	v
+MimeType	requestdata.h	/^class MimeType$/;"	c
+MutexLockGuard	requestdata.cpp	/^MutexLockGuard::MutexLockGuard()$/;"	f	class:MutexLockGuard
+MutexLockGuard	requestdata.h	/^class MutexLockGuard$/;"	c
+OBJS	Makefile	/^OBJS    := $(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(SOURCE)))$/;"	m
+PARSE_HEADER_AGAIN	requestdata.cpp	/^const int PARSE_HEADER_AGAIN = -1;$/;"	v
+PARSE_HEADER_ERROR	requestdata.cpp	/^const int PARSE_HEADER_ERROR = -1;$/;"	v
+PARSE_HEADER_SUCCESSS	requestdata.cpp	/^const int PARSE_HEADER_SUCCESSS = 0;$/;"	v
+PARSE_URI_AGAIN	requestdata.cpp	/^const int PARSE_URI_AGAIN = -1;$/;"	v
+PARSE_URI_ERROR	requestdata.cpp	/^const int PARSE_URI_ERROR = -2;$/;"	v
+PARSE_URI_SUCCESS	requestdata.cpp	/^const int PARSE_URI_SUCCESS = 0;$/;"	v
+PATH	main.cpp	/^const std::string PATH = "\/";$/;"	v
+PORT	main.cpp	/^const int PORT = 8888; $/;"	v
+QUEUE_SIZE	main.cpp	/^const int QUEUE_SIZE = 65535;$/;"	v
+SOURCE	Makefile	/^SOURCE  := $(wildcard *.cpp)$/;"	m
+STATE_ANALYSIS	requestdata.cpp	/^const int STATE_ANALYSIS = 4;$/;"	v
+STATE_FINISH	requestdata.cpp	/^const int STATE_FINISH = 5;$/;"	v
+STATE_PARSE_HEADERS	requestdata.cpp	/^const int STATE_PARSE_HEADERS = 2;$/;"	v
+STATE_PARSE_URI	requestdata.cpp	/^const int STATE_PARSE_URI = 1;$/;"	v
+STATE_RECV_BODY	requestdata.cpp	/^const int STATE_RECV_BODY = 3;$/;"	v
+TARGET	Makefile	/^TARGET  := myserver$/;"	m
+THREADPOOL_GRACEFUL	threadpool.cpp	/^const int THREADPOOL_GRACEFUL = 1;$/;"	v
+THREADPOOL_INVALID	threadpool.cpp	/^const int THREADPOOL_INVALID = -1;$/;"	v
+THREADPOOL_LOCK_FAILURE	threadpool.cpp	/^const int THREADPOOL_LOCK_FAILURE = -2;$/;"	v
+THREADPOOL_QUEUE_FULL	threadpool.cpp	/^const int THREADPOOL_QUEUE_FULL = -3;$/;"	v
+THREADPOOL_SHUTDOWN	threadpool.cpp	/^const int THREADPOOL_SHUTDOWN = -4;$/;"	v
+THREADPOOL_THREAD_FAILURE	threadpool.cpp	/^const int THREADPOOL_THREAD_FAILURE = -5;$/;"	v
+THREADPOOL_THREAD_NUM	main.cpp	/^const int THREADPOOL_THREAD_NUM = 4;$/;"	v
+TIMER_TIME_OUT	main.cpp	/^const int TIMER_TIME_OUT = 500;$/;"	v
+_EPOLL_H_	epoll.h	4;"	d
+_REQUESTDATA_H_	requestdata.h	3;"	d
+_THREADPOOL_H_	threadpool.h	4;"	d
+_UTIL_H_	util.h	3;"	d
+acceptConnection	main.cpp	/^void acceptConnection(int listen_fd, int epoll_fd, const std::string &path)$/;"	f
+addTimer	requestdata.cpp	/^void requestData::addTimer(mytimer *mtimer)$/;"	f	class:requestData
+againTimes	requestdata.h	/^		int againTimes;$/;"	m	struct:requestData
+analysisRequest	requestdata.cpp	/^int requestData::analysisRequest()$/;"	f	class:requestData
+argument	threadpool.h	/^	void *argument;$/;"	m	struct:__anon2
+clearReq	requestdata.cpp	/^void mytimer::clearReq()$/;"	f	class:mytimer
+content	requestdata.h	/^		std::string content;$/;"	m	struct:requestData
+count	threadpool.h	/^	int count;$/;"	m	struct:threadpool_t
+deleted	requestdata.h	/^	bool deleted;$/;"	m	struct:mytimer
+epoll_add	epoll.cpp	/^int epoll_add(int epoll_fd, int fd, void * request, __uint32_t events)$/;"	f
+epoll_del	epoll.cpp	/^int epoll_del(int epoll_fd, int fd, void * request, __uint32_t events)$/;"	f
+epoll_init	epoll.cpp	/^int epoll_init()$/;"	f
+epoll_mod	epoll.cpp	/^int epoll_mod(int epoll_fd, int fd, void * request, __uint32_t events)$/;"	f
+epollfd	requestdata.h	/^		int epollfd;$/;"	m	struct:requestData
+events	epoll.cpp	/^struct epoll_event *events;$/;"	v	typeref:struct:epoll_event
+expired_time	requestdata.h	/^	size_t expired_time;$/;"	m	struct:mytimer
+fd	requestdata.h	/^		int fd;$/;"	m	struct:requestData
+file_name	requestdata.h	/^		std::string file_name;$/;"	m	struct:requestData
+function	threadpool.h	/^	void (*function)(void *);$/;"	m	struct:__anon2
+getExpTime	requestdata.cpp	/^size_t mytimer::getExpTime() const$/;"	f	class:mytimer
+getFd	requestdata.cpp	/^int requestData::getFd()$/;"	f	class:requestData
+getMime	requestdata.cpp	/^std::string MimeType::getMime(const std::string &suffix)$/;"	f	class:MimeType
+graceful_shutdown	threadpool.h	/^	graceful_shutdown = 2$/;"	e	enum:__anon1
+h_CR	requestdata.h	/^	h_CR,$/;"	e	enum:HeadersState
+h_LF	requestdata.h	/^	h_LF,$/;"	e	enum:HeadersState
+h_colon	requestdata.h	/^	h_colon,$/;"	e	enum:HeadersState
+h_end_CR	requestdata.h	/^	h_end_CR,$/;"	e	enum:HeadersState
+h_end_LF	requestdata.h	/^	h_end_LF$/;"	e	enum:HeadersState
+h_key	requestdata.h	/^	h_key,$/;"	e	enum:HeadersState
+h_spaces_after_colon	requestdata.h	/^	h_spaces_after_colon,$/;"	e	enum:HeadersState
+h_start	requestdata.h	/^	h_start = 0,$/;"	e	enum:HeadersState
+h_state	requestdata.h	/^		int h_state;$/;"	m	struct:requestData
+h_value	requestdata.h	/^	h_value,$/;"	e	enum:HeadersState
+handleError	requestdata.cpp	/^void requestData::handleError(int fd, int err_num, std::string short_msg)$/;"	f	class:requestData
+handleRequest	requestdata.cpp	/^void requestData::handleRequest()$/;"	f	class:requestData
+handle_events	main.cpp	/^void handle_events(int epoll_fd, int listen_fd, struct epoll_event *events, int events_num,$/;"	f
+handle_expired_event	main.cpp	/^void handle_expired_event()$/;"	f
+handle_for_sigpipe	util.cpp	/^void handle_for_sigpipe()$/;"	f
+head	threadpool.h	/^	int head;$/;"	m	struct:threadpool_t
+headers	requestdata.h	/^		std::unordered_map<std::string, std::string> headers;$/;"	m	struct:requestData
+immediate_shutdown	threadpool.h	/^	immediate_shutdown = 1,$/;"	e	enum:__anon1
+isDeleted	requestdata.cpp	/^bool mytimer::isDeleted() const$/;"	f	class:mytimer
+isfinish	requestdata.h	/^		bool isfinish;$/;"	m	struct:requestData
+isvalid	requestdata.cpp	/^bool mytimer::isvalid()$/;"	f	class:mytimer
+keep_alive	requestdata.h	/^		bool keep_alive;$/;"	m	struct:requestData
+lock	requestdata.cpp	/^pthread_mutex_t MimeType::lock = PTHREAD_MUTEX_INITIALIZER;$/;"	m	class:MimeType	file:
+lock	requestdata.cpp	/^pthread_mutex_t MutexLockGuard::lock = PTHREAD_MUTEX_INITIALIZER;$/;"	m	class:MutexLockGuard	file:
+lock	requestdata.h	/^		static pthread_mutex_t lock;$/;"	m	class:MimeType
+lock	requestdata.h	/^		static pthread_mutex_t lock;$/;"	m	class:MutexLockGuard
+lock	threadpool.h	/^	pthread_mutex_t lock;$/;"	m	struct:threadpool_t
+main	main.cpp	/^int main(int argc, char *argv[])$/;"	f
+method	requestdata.h	/^		int method;$/;"	m	struct:requestData
+mime	requestdata.cpp	/^std::unordered_map<std::string, std::string> MimeType::mime;$/;"	m	class:MimeType	file:
+mime	requestdata.h	/^		static std::unordered_map<std::string, std::string> mime;$/;"	m	class:MimeType
+myHandler	main.cpp	/^void myHandler(void *args)$/;"	f
+myTimerQueue	requestdata.cpp	/^std::priority_queue<mytimer *, std::deque<mytimer *>, timerCmp> myTimerQueue;  $/;"	v
+my_epoll_wait	epoll.cpp	/^int my_epoll_wait(int epoll_fd, struct epoll_event *events, int max_events, int timeout)$/;"	f
+mytimer	requestdata.cpp	/^mytimer::mytimer(requestData *_request_data, int timeout) : deleted(false), request_data(_request_data)$/;"	f	class:mytimer
+mytimer	requestdata.h	/^struct mytimer$/;"	s
+notify	threadpool.h	/^	pthread_cond_t notify;$/;"	m	struct:threadpool_t
+now_read_pos	requestdata.h	/^		int now_read_pos;$/;"	m	struct:requestData
+operator ()	requestdata.cpp	/^bool timerCmp::operator()(const mytimer *lhs, const mytimer *rhs)$/;"	f	class:timerCmp
+parse_Headers	requestdata.cpp	/^int requestData::parse_Headers()$/;"	f	class:requestData
+parse_URI	requestdata.cpp	/^int requestData::parse_URI()$/;"	f	class:requestData
+path	requestdata.h	/^		std::string path;$/;"	m	struct:requestData
+queue	threadpool.h	/^	threadpool_task_t *queue;$/;"	m	struct:threadpool_t
+queue_size	threadpool.h	/^	int queue_size;$/;"	m	struct:threadpool_t
+readn	util.cpp	/^ssize_t readn(int fd, void *buff, size_t n)$/;"	f
+requestData	requestdata.cpp	/^requestData::requestData() :$/;"	f	class:requestData
+requestData	requestdata.cpp	/^requestData::requestData(std::string _path, int _fd, int _epollfd) :$/;"	f	class:requestData
+requestData	requestdata.h	/^struct requestData$/;"	s
+request_data	requestdata.h	/^	requestData *request_data;$/;"	m	struct:mytimer
+reset	requestdata.cpp	/^void requestData::reset()$/;"	f	class:requestData
+seperateTimer	requestdata.cpp	/^void requestData::seperateTimer()$/;"	f	class:requestData
+setDeleted	requestdata.cpp	/^void mytimer::setDeleted()$/;"	f	class:mytimer
+setFd	requestdata.cpp	/^void requestData::setFd(int _fd)$/;"	f	class:requestData
+setSocketNonBlocking	util.cpp	/^int setSocketNonBlocking(int fd)$/;"	f
+shutdown	threadpool.h	/^	int shutdown;$/;"	m	struct:threadpool_t
+socket_bind_listen	main.cpp	/^int socket_bind_listen(int port)$/;"	f
+started	threadpool.h	/^	int started;$/;"	m	struct:threadpool_t
+state	requestdata.h	/^		int state;$/;"	m	struct:requestData
+tail	threadpool.h	/^	int tail;$/;"	m	struct:threadpool_t
+test	threadpool.cpp	/^void test(void *arg)$/;"	f
+thread_count	threadpool.h	/^	int thread_count;$/;"	m	struct:threadpool_t
+threadpool_add	threadpool.cpp	/^int threadpool_add(threadpool_t *pool, void (*function)(void *), void *argument, int flags)$/;"	f
+threadpool_create	threadpool.cpp	/^threadpool_t *threadpool_create(int thread_count, int queue_size, int flags)$/;"	f
+threadpool_destroy	threadpool.cpp	/^int threadpool_destroy(threadpool_t *pool, int flags)$/;"	f
+threadpool_free	threadpool.cpp	/^int threadpool_free(threadpool_t *pool)$/;"	f
+threadpool_shutdown_t	threadpool.h	/^}threadpool_shutdown_t;$/;"	t	typeref:enum:__anon1
+threadpool_t	threadpool.h	/^struct threadpool_t$/;"	s
+threadpool_task_t	threadpool.h	/^}threadpool_task_t;$/;"	t	typeref:struct:__anon2
+threadpool_thread	threadpool.cpp	/^static void *threadpool_thread(void *threadpool)$/;"	f	file:
+threads	threadpool.h	/^	pthread_t *threads;$/;"	m	struct:threadpool_t
+timer	requestdata.h	/^		mytimer *timer;$/;"	m	struct:requestData
+timerCmp	requestdata.h	/^struct timerCmp$/;"	s
+update	requestdata.cpp	/^void mytimer::update(int timeout)$/;"	f	class:mytimer
+writen	util.cpp	/^ssize_t writen(int fd, void *buff, size_t n)$/;"	f
+~MutexLockGuard	requestdata.cpp	/^MutexLockGuard::~MutexLockGuard()$/;"	f	class:MutexLockGuard
+~mytimer	requestdata.cpp	/^mytimer::~mytimer()$/;"	f	class:mytimer
+~requestData	requestdata.cpp	/^requestData::~requestData()$/;"	f	class:requestData
