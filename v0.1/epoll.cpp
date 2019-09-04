@@ -64,7 +64,6 @@ int epoll_del(int epoll_fd, int fd, void *request, __uint32_t events)
 // 返回活跃事件数
 int my_epoll_wait(int epoll_fd, struct epoll_event* events, int max_events, int timeout)
 {
-	std::cout << "my_epoll_wait" << std::endl;
     int ret_count = epoll_wait(epoll_fd, events, max_events, timeout);
     if (ret_count < 0)
     {

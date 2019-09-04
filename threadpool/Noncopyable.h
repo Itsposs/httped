@@ -3,15 +3,17 @@
 #ifndef _NONCOPYABLE_H_
 #define _NONCOPYABLE_H_
 
-namespace threadpool
+
+inline namespace tp
 {
-	inline namespace util
+	// inline namespace util
+	namespace util
 	{
 		class Noncopyable
 		{
 			public:
 				Noncopyable(const Noncopyable &rhs) = delete;
-				void operator=(const Noncopyable &rhs) = delete;
+				Noncopyable& operator=(const Noncopyable &rhs) = delete;
 			private:
 			protected:
 				Noncopyable() = default;
