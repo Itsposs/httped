@@ -19,10 +19,10 @@ int main(int argc, char *argv[])
 	threadpool_add(pool, hello, NULL, 0);
 	threadpool_add(pool, hello, NULL, 0);
 	threadpool_add(pool, hello, NULL, 0);
-	sleep(10);
+	sleep(20);
 	//threadpool_destroy(pool, 0);
 	threadpool_free(pool);
-
+	
 	//std::cout << "Hello world!" << std::endl;
 	return 0;
 }
