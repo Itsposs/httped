@@ -34,8 +34,8 @@ size_t convert(char buf[], T value)
 }
 
 
-template class FixBuffer<kSmallBuffer>;
-template class FixBuffer<kLargeBuffer>;
+template class FixedBuffer<kSmallBuffer>;
+template class FixedBuffer<kLargeBuffer>;
 
 template<typename T>
 void LogStream::formatInteger(T v)

@@ -77,11 +77,13 @@ int socket_bind_listen(int port)
 
 int main(int argc, char *argv[])
 {
+	/*
 	LOG << "yingyingying";
 	LOG << 654 << 3.2  << 0 << std::string("fg") << true;
 #ifndef _PTHREADS
 	LOG << "_PTHREADS is not defined!";
 #endif
+	*/
 	handle_for_sigpipe();
 	if(Epoll::epoll_init(MAXEVENTS, LISTENQ) < 0)
 	{

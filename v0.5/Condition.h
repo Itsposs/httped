@@ -4,6 +4,8 @@
 #define _CONDITION_H_
 
 #include <time.h>
+#include <errno.h>
+#include <cstdint>
 #include "MutexLock.h"
 #include "noncopyable.h"
 
