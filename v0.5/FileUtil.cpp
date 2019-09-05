@@ -2,7 +2,7 @@
 
 #include "FileUtil.h"
 #include <assert.h>
-#include <eerrno.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -13,17 +13,17 @@
 AppendFile::AppendFile(std::string filename) 
 	: fp_(::fopen(filename.c_str(), "ae"))
 {
-	setbuffer(fp_, buffer_, sizeof(buffer_));
+	setbuffer(fp_, buffer_, sizeof buffer_);
 }
 
 AppendFile::~AppendFile()
 {
-	::fclose(fp_);
+	fclose(fp_);
 }
 
 void AppendFile::flush()
 {
-	::fflush(fp_);
+	fflush(fp_);
 }
 
 void AppendFile::append(const char *logline, const size_t len)
