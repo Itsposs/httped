@@ -3,11 +3,11 @@
 #ifndef _LOGFILE_H_
 #define _LOGFILE_H_
 
+#include <memory>
+#include <string>
 #include "FileUtil.h"
 #include "MutexLock.h"
 #include "noncopyable.h"
-#include <memory>
-#include <string>
 
 
 

@@ -39,3 +39,4 @@ void LogFile::append_unlocked(const char *logline, int len)
 		file_ -> flush();
 	}
 }
+
