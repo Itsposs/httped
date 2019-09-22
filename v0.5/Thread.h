@@ -4,12 +4,13 @@
 #define _THREAD_H_
 
 
-#include "CountDownLatch.h"
-#include "noncopyable.h"
-#include <functional>
+#include <string>
 #include <memory>
 #include <pthread.h>
-#include <string>
+#include <functional>
+#include "noncopyable.h"
+#include "CountDownLatch.h"
+
 
 
 class Thread : noncopyable
@@ -38,7 +39,6 @@ class Thread : noncopyable
 		CountDownLatch latch_;
 		
 };
-
 
 
 

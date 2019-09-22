@@ -4,11 +4,11 @@
 #ifndef _LOGGING_H_
 #define _LOGGING_H_
 
-#include "LogStream.h"
-#include <pthread.h>
-#include <string.h>
 #include <string>
 #include <stdio.h>
+#include <string.h>
+#include <pthread.h>
+#include "LogStream.h"
 
 
 class AsyncLogging;

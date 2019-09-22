@@ -18,6 +18,7 @@ class Condition : public noncopyable
 		void wait() { ::pthread_cond_wait(&cond, mutex.get()); }
 		void notify() { ::pthread_cond_signal(&cond); }
 		void notifyAll() { ::pthread_cond_broadcast(&cond); }
+
 		bool waitForSecond(int seconds)
 		{
 			struct timespec abstime;

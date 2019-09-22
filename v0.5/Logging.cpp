@@ -1,8 +1,8 @@
 
 
-#include "Logging.h"
 #include "Thread.h"
 #include <assert.h>
+#include "Logging.h"
 #include "AsyncLogging.h"
 
 

@@ -1,6 +1,5 @@
 
 
-
 #ifndef _LOGSTREAM_H_
 #define _LOGSTREAM_H_
 

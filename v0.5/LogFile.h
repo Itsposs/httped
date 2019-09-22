@@ -10,7 +10,6 @@
 #include "noncopyable.h"
 
 
-
 class LogFile : noncopyable
 {
 	public:

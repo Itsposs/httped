@@ -1,14 +1,14 @@
 
 
+#include <memory>
+#include <errno.h>
+#include "Thread.h"
 #include <assert.h>
 #include <stdint.h>
 #include <unistd.h>
-#include <sys/syscall.h>
 #include <sys/prctl.h>
 #include <sys/types.h>
-#include <errno.h>
-#include <memory>
-#include "Thread.h"
+#include <sys/syscall.h>
 
 
 namespace CurrentThread

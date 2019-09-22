@@ -44,9 +44,9 @@ class AsyncLogging : noncopyable
 
 		void threadFunc();
 
-		typedef FixedBuffer<kLargeBuffer> Buffer;
-		typedef std::vector<std::shared_ptr<Buffer>> BufferVector;
-		typedef std::shared_ptr<Buffer> BufferPtr;
+		typedef FixedBuffer<kLargeBuffer> Buffer;   // buffer
+		typedef std::vector<std::shared_ptr<Buffer>> BufferVector; // buffers' pointer of vector
+		typedef std::shared_ptr<Buffer> BufferPtr; // buffers' pointer
 
 		const int flushInterval_;
 		bool running_;
@@ -59,5 +59,6 @@ class AsyncLogging : noncopyable
 		BufferVector buffers_;
 		CountDownLatch latch_;
 };
+
 
 #endif
