@@ -7,15 +7,13 @@
 
 struct epoll_event* events;
 
-int epoll_init()
-{
-	std::cout << "epoll_init" << std::endl;
-    int epoll_fd = epoll_create(LISTENQ + 1);
-    if(epoll_fd == -1)
-        return -1;
+int epoll_init() {
+	int epoll_fd = epoll_create(LISTENQ + 1);
+  if(epoll_fd == -1)
+		return -1;
 	// 动态分配内存可以用全局变量
-    events = new epoll_event[MAXEVENTS];
-    return epoll_fd;
+  events = new epoll_event[MAXEVENTS];
+  return epoll_fd;
 }
 
 // 注册新描述符

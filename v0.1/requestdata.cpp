@@ -1,56 +1,48 @@
-#include "requestdata.h"
+
+#include <queue>
 #include "util.h"
 #include "epoll.h"
-#include <sys/epoll.h>
-#include <unistd.h>
-#include <sys/time.h>
-#include <unordered_map>
 #include <fcntl.h>
+#include <unistd.h>
+#include <iostream>
+#include <string.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
-#include <string.h>
-#include <queue>
-
-
-#include <opencv/cv.h>
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/opencv.hpp>
-using namespace cv;
+#include <sys/time.h>
+#include <sys/epoll.h>
+#include "requestdata.h"
+#include <unordered_map>
 
 
 pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t MimeType::lock = PTHREAD_MUTEX_INITIALIZER;
 std::unordered_map<std::string, std::string> MimeType::mime;
 
-std::string MimeType::getMime(const std::string &suffix)
-{
-    if (mime.size() == 0)
-    {
-        pthread_mutex_lock(&lock);
-        if (mime.size() == 0)
-        {
-            mime[".html"] = "text/html";
-            mime[".avi"] = "video/x-msvideo";
-            mime[".bmp"] = "image/bmp";
-            mime[".c"] = "text/plain";
-            mime[".doc"] = "application/msword";
-            mime[".gif"] = "image/gif";
-            mime[".gz"] = "application/x-gzip";
-            mime[".htm"] = "text/html";
-            mime[".ico"] = "application/x-ico";
-            mime[".jpg"] = "image/jpeg";
-            mime[".png"] = "image/png";
-            mime[".txt"] = "text/plain";
-            mime[".mp3"] = "audio/mp3";
-            mime["default"] = "text/html";
-        }
-        pthread_mutex_unlock(&lock);
-    }
-    if (mime.find(suffix) == mime.end())
-        return mime["default"];
-    else
-        return mime[suffix];
+std::string MimeType::getMime(const std::string &suffix) {
+	if (mime.size() == 0) {
+		pthread_mutex_lock(&lock);
+    if (mime.size() == 0) {
+			mime[".html"] = "text/html";
+			mime[".avi"] = "video/x-msvideo";
+			mime[".bmp"] = "image/bmp";
+			mime[".c"] = "text/plain";
+			mime[".doc"] = "application/msword";
+			mime[".gif"] = "image/gif";
+			mime[".gz"] = "application/x-gzip";
+			mime[".htm"] = "text/html";
+			mime[".ico"] = "application/x-ico";
+			mime[".jpg"] = "image/jpeg";
+			mime[".png"] = "image/png";
+			mime[".txt"] = "text/plain";
+			mime[".mp3"] = "audio/mp3";
+			mime["default"] = "text/html";
+		}
+		pthread_mutex_unlock(&lock);
+	}
+  if (mime.find(suffix) == mime.end())
+		return mime["default"];
+	else
+		return mime[suffix];
 }
 
 
@@ -58,11 +50,7 @@ std::priority_queue<mytimer*, std::deque<mytimer*>, timerCmp> myTimerQueue;
 
 requestData::requestData(): againTimes(0), now_read_pos(0), 
 	state(STATE_PARSE_URI), h_state(h_start), isfinish(false), 
-	keep_alive(false),timer(NULL)
-{
-    std::cout << "requestData constructed !" << std::endl;
-}
-
+	keep_alive(false),timer(NULL) {}
 
 requestData::requestData(int _epollfd, int _fd, std::string _path):
     againTimes(0), path(_path), fd(_fd), epollfd(_epollfd), 
@@ -96,12 +84,10 @@ void requestData::addTimer(mytimer *mtimer)
 
 int requestData::getFd() const
 {
-	std::cout << "getFd" << std::endl;
     return fd;
 }
 void requestData::setFd(int _fd)
 {
-	std::cout << "setFd" <<  std::endl;
     fd = _fd;
 }
 
@@ -121,7 +107,7 @@ void requestData::reset()
 
 void requestData::seperateTimer()
 {
-	std::cout << "seperateTimer" << std::endl;
+	std::cout << "seperateTimer()" << std::endl;
     if (timer)
     {
         timer -> clearReq();
@@ -131,7 +117,7 @@ void requestData::seperateTimer()
 
 void requestData::handleRequest()
 {
-	std::cout << "handleRequest" << std::endl;
+	std::cout << "handleRequest()" << std::endl;
     char buff[MAX_BUFF];
     bool isError = false;
 
@@ -162,7 +148,7 @@ void requestData::handleRequest()
             break;
         }
         
-		string now_read(buff, buff + read_num);
+				std::string now_read(buff, buff + read_num);
         content += now_read;
 		//std::cout << "content:" << content << std::endl;
 
@@ -282,7 +268,7 @@ void requestData::handleRequest()
 int requestData::parse_URI()
 {
 	std::cout << "parse_URI" << std::endl;
-    string &str = content;
+	std::string &str = content;
     // 读到完整的请求行再开始解析请求
     int pos = str.find('\r', now_read_pos);
 	std::cout << "pos:" << pos << std::endl;
@@ -297,7 +283,7 @@ int requestData::parse_URI()
     }
 
     // 去掉请求行所占的空间，节省空间
-    string request_line = str.substr(0, pos);
+	std::string request_line = str.substr(0, pos);
 	std::cout << "request_line:" << request_line << std::endl;
     if(str.size() > (unsigned int)(pos + 1))
         str = str.substr(pos + 1);
@@ -372,7 +358,7 @@ int requestData::parse_URI()
         }
         else
         {
-            string ver = request_line.substr(pos + 1, 3);
+					std::string ver = request_line.substr(pos + 1, 3);
 			std::cout << "ver:" << ver << std::endl;
             if(ver == "1.0")
                 HTTPversion = HTTP_10;
@@ -389,7 +375,7 @@ int requestData::parse_URI()
 int requestData::parse_Headers()
 {
 	std::cout << "parse_Headers" << std::endl;
-    string &str = content;
+	std::string &str = content;
 	std::cout << "content1:" << str << std::endl;
     int key_start = -1, key_end = -1, value_start = -1, value_end = -1;
     int now_read_line_begin = 0;
@@ -455,8 +441,8 @@ int requestData::parse_Headers()
                 if(str[i] == '\n')
                 {
                     h_state = h_LF;
-                    string key(str.begin() + key_start, str.begin() + key_end);
-                    string value(str.begin() + value_start, str.begin() + value_end);
+										std::string key(str.begin() + key_start, str.begin() + key_end);
+										std::string value(str.begin() + value_start, str.begin() + value_end);
                     headers[key] = value;
                     now_read_line_begin = i;
                 }
@@ -540,10 +526,10 @@ int requestData::analysisRequest()
             return ANALYSIS_ERROR;
         }
         std::cout << "content size ==" << content.size() << std::endl;
-        vector<char> data(content.begin(), content.end());
+				std::vector<char> data(content.begin(), content.end());
 		// ???
-        Mat test = imdecode(data, CV_LOAD_IMAGE_ANYDEPTH|CV_LOAD_IMAGE_ANYCOLOR);
-        imwrite("receive.bmp", test);
+        //Mat test = imdecode(data, CV_LOAD_IMAGE_ANYDEPTH|CV_LOAD_IMAGE_ANYCOLOR);
+        //imwrite("receive.bmp", test);
         return ANALYSIS_SUCCESS;
     }
     else if (method == METHOD_GET)
@@ -600,11 +586,11 @@ int requestData::analysisRequest()
         return ANALYSIS_ERROR;
 }
 
-void requestData::handleError(int fd, int err_num, string short_msg)
+void requestData::handleError(int fd, int err_num, std::string short_msg)
 {
 	std::cout << "handleError" << std::endl;
     char send_buff[MAX_BUFF];
-    string body_buff, header_buff;
+		std::string body_buff, header_buff;
 
     short_msg = " " + short_msg;
     body_buff += "<html><title>TKeed Error</title>";
@@ -671,26 +657,26 @@ bool mytimer::isvalid()
 
 void mytimer::clearReq()
 {
-	std::cout << "clearReq" << std::endl;
+	std::cout << "clearReq()" << std::endl;
     request_data = NULL;
     this -> setDeleted();
 }
 
 void mytimer::setDeleted()
 {
-	std::cout << "setDeleted" << std::endl;
+	std::cout << "setDeleted()" << std::endl;
     deleted = true;
 }
 
 bool mytimer::isDeleted() const
 {
-	std::cout << "isDeleted" << std::endl;
+	std::cout << "isDeleted()" << std::endl;
     return deleted;
 }
 
 size_t mytimer::getExpTime() const
 {
-	std::cout << "getExpTime" << std::endl;
+	std::cout << "getExpTime()" << std::endl;
     return expired_time;
 }
 

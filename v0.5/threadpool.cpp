@@ -227,8 +227,8 @@ void * ThreadPool::threadpool_thread(void *args)
         /* Grab our task */
         task.fun = queue[head].fun;
         task.args = queue[head].args;
-		queue[head].fun = NULL;
-		queue[head].args.reset();
+				queue[head].fun = NULL;
+				queue[head].args.reset();
         head = (head + 1) % queue_size;
         --count;
 		

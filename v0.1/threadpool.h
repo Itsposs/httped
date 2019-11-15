@@ -66,8 +66,8 @@ struct threadpool_t
     int started;
 };
 
-threadpool_t *threadpool_create(int thread_count, int queue_size, int flags);
-int threadpool_add(threadpool_t *pool, void (*function)(void *), void *argument, int flags);
+threadpool_t *threadpool_create(int thread_count, int queue_size);
+int threadpool_add(threadpool_t *pool, void (*function)(void *), void *argument);
 int threadpool_destroy(threadpool_t *pool, int flags);
 int threadpool_free(threadpool_t *pool);
 
