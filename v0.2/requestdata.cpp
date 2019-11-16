@@ -32,9 +32,6 @@
 #include <pthread.h>
 #include "requestdata.h"
 
-// opencv
-//#include <opencv/cv.h>
-//#include <opencv2/opencv.hpp>
 
 
 // requestData

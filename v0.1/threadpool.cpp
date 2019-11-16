@@ -7,39 +7,42 @@ static void *threadpool_thread(void *threadpool);
 threadpool_t *threadpool_create(int thread_count, int queue_size)
 {
 	threadpool_t *pool;
-	int i;
-	//(void) flags;
-	do {
-		if(thread_count <= 0 || thread_count > MAX_THREADS || queue_size <= 0 || queue_size > MAX_QUEUE) {
+	do 
+	{
+		if(thread_count <= 0 || thread_count > MAX_THREADS || queue_size <= 0 || queue_size > MAX_QUEUE) 
+		{
 			return NULL;
 		}
 		// C++ 指针nullptr
 		// C++ 动态开辟空间new
 		// C++ 异常
-    if((pool = (threadpool_t *)malloc(sizeof(threadpool_t))) == NULL) {
-			break;
-    }
-    
-    /* Initialize */
-    pool -> thread_count = 0;
-    pool -> queue_size = queue_size;
-		// 注意用指针nullptr
-    pool -> head = pool -> tail = pool -> count = 0;
-    pool -> shutdown = pool -> started = 0;
-    
-    /* Allocate thread and task queue */
-    pool -> threads = (pthread_t *)malloc(sizeof(pthread_t) * thread_count);
-    pool -> queue = (threadpool_task_t *)malloc(sizeof(threadpool_task_t) * queue_size);
-    
-    /* Initialize mutex and conditional variable first */
-    if ((pthread_mutex_init(&(pool -> lock), NULL) != 0) || 
-				(pthread_cond_init(&(pool -> notify), NULL) != 0) || 
-				(pool -> threads == NULL) || (pool -> queue == NULL)) {
+		if((pool = (threadpool_t *)malloc(sizeof(threadpool_t))) == NULL) 
+		{
 			break;
 		}
     
-    /* Start worker threads */
-    for (i = 0; i < thread_count; i++) {
+		/* Initialize */
+		pool -> thread_count = 0;
+		pool -> queue_size = queue_size;
+		// 注意用指针nullptr
+		pool -> head = pool -> tail = pool -> count = 0;
+		pool -> shutdown = pool -> started = 0;
+    
+		/* Allocate thread and task queue */
+		pool -> threads = (pthread_t *)malloc(sizeof(pthread_t) * thread_count);
+		pool -> queue = (threadpool_task_t *)malloc(sizeof(threadpool_task_t) * queue_size);
+    
+		/* Initialize mutex and conditional variable first */
+		if ((pthread_mutex_init(&(pool -> lock), NULL) != 0) || 
+				(pthread_cond_init(&(pool -> notify), NULL) != 0) || 
+				(pool -> threads == NULL) || (pool -> queue == NULL)) 
+		{
+			break;
+		}
+    
+		/* Start worker threads */
+		for (int i = 0; i < thread_count; i++) 
+		{
 			// 任务线程threadpool_thread 
 			if (pthread_create(&(pool -> threads[i]), NULL, threadpool_thread, (void*)pool) != 0) {
 				threadpool_destroy(pool, 0);
@@ -49,76 +52,87 @@ threadpool_t *threadpool_create(int thread_count, int queue_size)
 			pool -> started++;
 		}
 		return pool;
+
 	} while(false);
     
-	if (pool != NULL) {
+	if (pool != NULL) 
+	{
 		std::cout << "poo != NULL" << std::endl;
-    threadpool_free(pool);
+		threadpool_free(pool);
 	}
 	return NULL;
 }
 
-int threadpool_add(threadpool_t *pool, void (*function)(void *), void *argument) {
+int threadpool_add(threadpool_t *pool, void (*function)(void *), void *argument) 
+{
 	std::cout << "threadpool_add" << std::endl;
-  int err = 0;
-  int next;
-	//(void) flags;
-  if(pool == NULL || function == NULL) {
+	int err = 0;
+	int next;
+	if(pool == NULL || function == NULL) 
+	{
 		return THREADPOOL_INVALID;
 	}
   
-	if(pthread_mutex_lock(&(pool -> lock)) != 0) {
+	if(pthread_mutex_lock(&(pool -> lock)) != 0) 
+	{
 		return THREADPOOL_LOCK_FAILURE;
 	}
-  next = (pool -> tail + 1) % pool -> queue_size;
-  do {
+	next = (pool -> tail + 1) % pool -> queue_size;
+	do 
+	{
 		/* Are we full ? */
-    if (pool -> count == pool -> queue_size) {
+		if (pool -> count == pool -> queue_size) 
+		{
 			err = THREADPOOL_QUEUE_FULL;
-      break;
+			break;
 		}
 		/* Are we shutting down ? */
-		if (pool -> shutdown) {
+		if (pool -> shutdown) 
+		{
             err = THREADPOOL_SHUTDOWN;
             break;
 		}
-    /* Add task to queue */
-    pool -> queue[pool -> tail].function = function;
-    pool -> queue[pool -> tail].argument = argument;
-    pool -> tail = next;
-    pool -> count += 1;
+		/* Add task to queue */
+		pool -> queue[pool -> tail].function = function;
+		pool -> queue[pool -> tail].argument = argument;
+		pool -> tail = next;
+		pool -> count += 1;
         
-    /* pthread_cond_broadcast */
-    if (pthread_cond_signal(&(pool -> notify)) != 0) {
+		/* pthread_cond_broadcast */
+		if (pthread_cond_signal(&(pool -> notify)) != 0) 
+		{
 			err = THREADPOOL_LOCK_FAILURE;
-      break;
+			break;
 		}
 	} while(false);
 	
-	if(pthread_mutex_unlock(&pool -> lock) != 0) {
+	if(pthread_mutex_unlock(&pool -> lock) != 0) 
+	{
 		err = THREADPOOL_LOCK_FAILURE;
 	}
 	return err;
 }
 
-int threadpool_destroy(threadpool_t *pool, int flags) {
+int threadpool_destroy(threadpool_t *pool, int flags) 
+{
 	std::cout << "threadpool_destroy" << std::endl;
-  int i, err = 0;
 	
 	// 改用nullptr
-  if (pool == NULL) {
+	if (pool == NULL) {
 		return THREADPOOL_INVALID;
 	}
 
-  if (pthread_mutex_lock(&(pool -> lock)) != 0) {
+	if (pthread_mutex_lock(&(pool -> lock)) != 0) {
 		return THREADPOOL_LOCK_FAILURE;
 	}
 	
-	do {
+	int err = 0;
+	do 
+	{
 		/* Already shutting down */
-    if (pool -> shutdown) {
+		if (pool -> shutdown) {
 			err = THREADPOOL_SHUTDOWN;
-      break;
+			break;
 		}
 		
 		pool -> shutdown = (flags & THREADPOOL_GRACEFUL) ? graceful_shutdown : immediate_shutdown;
@@ -127,12 +141,14 @@ int threadpool_destroy(threadpool_t *pool, int flags) {
 		if((pthread_cond_broadcast(&(pool -> notify)) != 0) || 
 				(pthread_mutex_unlock(&(pool -> lock)) != 0)) {
 			err = THREADPOOL_LOCK_FAILURE;
-      break;
+			break;
 		}
 
-    /* Join all worker thread */
-    for (i = 0; i < pool -> thread_count; ++i) {
-			if (pthread_join(pool -> threads[i], NULL) != 0) {
+		/* Join all worker thread */
+		for (int i = 0; i < pool -> thread_count; ++i) 
+		{
+			if (pthread_join(pool -> threads[i], NULL) != 0) 
+			{
 				err = THREADPOOL_THREAD_FAILURE;
 			}
 		}
@@ -145,36 +161,40 @@ int threadpool_destroy(threadpool_t *pool, int flags) {
 	return err;
 }
 
-int threadpool_free(threadpool_t *pool) {
+int threadpool_free(threadpool_t *pool) 
+{
 	std::cout << "threadpool_free" << std::endl;
-  if (pool == NULL || pool -> started > 0) {
+	if (pool == NULL || pool -> started > 0) {
         return -1;
 	}
 
 	/* Did we manage to allocate ? */
-  if (pool -> threads) {
+	if (pool -> threads) 
+	{
 		free(pool -> threads);
-    free(pool -> queue);
+		free(pool -> queue);
  
-    //Because we allocate pool->threads after initializing the
-    //mutex and condition variable, we're sure they're
-    //initialized. Let's lock the mutex just in case. 
+		//Because we allocate pool->threads after initializing the
+		//mutex and condition variable, we're sure they're
+		//initialized. Let's lock the mutex just in case. 
 		 
 		pthread_mutex_lock(&(pool -> lock));
 		pthread_mutex_destroy(&(pool -> lock));
 		pthread_cond_destroy(&(pool -> notify));
 	}
 	free(pool);    
-  return 0;
+	return 0;
 }
 
 // 任务线程
-static void *threadpool_thread(void *threadpool) {
+static void *threadpool_thread(void *threadpool) 
+{
 	std::cout << "threadpool_thread" << std::endl;
-  threadpool_t *pool = (threadpool_t *)threadpool;
-  threadpool_task_t task;
+	threadpool_t *pool = (threadpool_t *)threadpool;
+	threadpool_task_t task;
 	
-	for (;;) {
+	for (;;) 
+	{
 		/* Lock must be taken to wait on conditional variable */
 		pthread_mutex_lock(&(pool -> lock));
 
@@ -207,3 +227,5 @@ static void *threadpool_thread(void *threadpool) {
 	pthread_exit(NULL);
 	return(NULL);
 }
+
+

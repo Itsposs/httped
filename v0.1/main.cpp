@@ -11,14 +11,13 @@
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-
 #include "threadpool.h"
 
 
-const int THREADPOOL_THREAD_NUM = 4;
-const int QUEUE_SIZE = 65535;
-
 const int PORT = 8000;
+const int QUEUE_SIZE = 65535;
+const int THREADPOOL_THREAD_NUM = 4;
+
 const int ASK_STATIC_FILE = 1;
 const int ASK_IMAGE_STITCH = 2;
 
@@ -32,7 +31,8 @@ extern pthread_mutex_t qlock;
 extern struct epoll_event* events;
 extern std::priority_queue<mytimer*, std::deque<mytimer*>, timerCmp> myTimerQueue;
 
-int socket_bind_listen(int port) {
+int socket_bind_listen(int port) 
+{
     // 检查port值，取正确区间范围
     if (port < 1024 || port > 65535)
         return -1;
@@ -70,19 +70,21 @@ int socket_bind_listen(int port) {
     return listen_fd;
 }
 
-void myHandler(void *args) {
+void myHandler(void *args) 
+{
 	std::cout << "myHandler"  << std::endl;
 	requestData *req_data = (requestData*)args;
-  req_data -> handleRequest();
+	req_data -> handleRequest();
 }
 
 void acceptConnection(int listen_fd, int epoll_fd, const std::string &path)
 {
 	std::cout << "acceptConnection" << std::endl;
-  struct sockaddr_in client_addr;
-  memset(&client_addr, 0, sizeof(struct sockaddr_in));
-  socklen_t client_addr_len = 0;
-  int accept_fd = 0;
+	struct sockaddr_in client_addr;
+	memset(&client_addr, 0, sizeof(struct sockaddr_in));
+	socklen_t client_addr_len = 0;
+	
+	int accept_fd = 0;
 	accept_fd = accept(listen_fd, (struct sockaddr*)&client_addr, &client_addr_len);
 	std::cout << "accept fd: " << accept_fd << std::endl;
 		
@@ -97,54 +99,58 @@ void acceptConnection(int listen_fd, int epoll_fd, const std::string &path)
 
 	// 设为非阻塞模式
 	int ret = set_socket_nonblocking(accept_fd);
-	if (ret < 0) {
+	if (ret < 0) 
+	{
 		perror("Set non block failed!");
-    return;
-  }
+		return;
+	}
 
-  requestData *req_info = new requestData(epoll_fd, accept_fd, path);
+	requestData *req_info = new requestData(epoll_fd, accept_fd, path);
 
-  // 文件描述符可以读，边缘触发(Edge Triggered)模式，保证一个socket连接在任一时刻只被一个线程处理
-  __uint32_t _epo_event = EPOLLIN | EPOLLET | EPOLLONESHOT;
-  epoll_add(epoll_fd, accept_fd, static_cast<void*>(req_info), _epo_event);
+	// 文件描述符可以读，边缘触发(Edge Triggered)模式，保证一个socket连接在任一时刻只被一个线程处理
+	__uint32_t _epo_event = EPOLLIN | EPOLLET | EPOLLONESHOT;
+	epoll_add(epoll_fd, accept_fd, static_cast<void*>(req_info), _epo_event);
         
 	// 新增时间信息
-  mytimer *mtimer = new mytimer(req_info, TIMER_TIME_OUT);
-  req_info -> addTimer(mtimer);
-  pthread_mutex_lock(&qlock);
-  myTimerQueue.push(mtimer);
-  pthread_mutex_unlock(&qlock);
-  //if(accept_fd == -1)
-  //   perror("accept");
+	mytimer *mtimer = new mytimer(req_info, TIMER_TIME_OUT);
+	req_info -> addTimer(mtimer);
+	pthread_mutex_lock(&qlock);
+	myTimerQueue.push(mtimer);
+	pthread_mutex_unlock(&qlock);
 }
 
 
 // 分发处理函数
 void handle_events(int epoll_fd, int listen_fd, struct epoll_event* events, 
-		int events_num, const std::string &path, threadpool_t* tp) {
+		int events_num, const std::string &path, threadpool_t* tp) 
+{
 	std::cout << "events_num :" << events_num << std::endl;		
-  for (int i = 0; i < events_num; i++) {
+	for (int i = 0; i < events_num; i++) 
+	{
 		// 获取有事件产生的描述符
-    requestData* request = (requestData*)(events[i].data.ptr);
-    int fd = request -> getFd();
-    // 有事件发生的描述符为监听描述符
-    if (fd == listen_fd) {
+		requestData* request = (requestData*)(events[i].data.ptr);
+		int fd = request -> getFd();
+		// 有事件发生的描述符为监听描述符
+		if (fd == listen_fd) 
+		{
 			std::cout << "This is a listen fd" << std::endl;
-			// 接受连接
-      acceptConnection(listen_fd, epoll_fd, path);
-		} else {
+			acceptConnection(listen_fd, epoll_fd, path);
+		} 
+		else 
+		{
 			std::cout << "This isn't a listen fd" << std::endl;
-      // 排除错误事件
-      if ((events[i].events & EPOLLERR) || (events[i].events & EPOLLHUP)
-					|| (!(events[i].events & EPOLLIN))) {
+			// 排除错误事件
+			if ((events[i].events & EPOLLERR) || (events[i].events & EPOLLHUP)
+					|| (!(events[i].events & EPOLLIN))) 
+			{
 				printf("error event\n");
-        delete request;
-        continue;
+				delete request;
+				continue;
 			}
 			// 将请求任务加入到线程池中
-      // 加入线程池之前将Timer和request分离
-      request -> seperateTimer();
-      threadpool_add(tp, myHandler, events[i].data.ptr);
+			// 加入线程池之前将Timer和request分离
+			request -> seperateTimer();
+			threadpool_add(tp, myHandler, events[i].data.ptr);
 		}
 	}
 }
@@ -163,21 +169,27 @@ void handle_events(int epoll_fd, int listen_fd, struct epoll_event* events,
 	复利用前面的requestData，减少了一次delete和一次new的时间。
 */
 
-void handle_expired_event() {
+void handle_expired_event() 
+{
 	std::cout << "handle_expired_event" << std::endl;
 	pthread_mutex_lock(&qlock);
-  while (!myTimerQueue.empty()) {
+	 while (!myTimerQueue.empty()) 
+	 {
 		std::cout << "TimerQueue:" << myTimerQueue.size() << std::endl;
 		mytimer *ptimer_now = myTimerQueue.top();
-		if (ptimer_now -> isDeleted()) {
+		if (ptimer_now -> isDeleted()) 
+		{
 			std::cout << "isDeleted" << std::endl;
-      myTimerQueue.pop();
-      delete ptimer_now;
-		} else if (ptimer_now -> isvalid() == false) {
+			myTimerQueue.pop();
+			delete ptimer_now;
+		} 
+		else if (ptimer_now -> isvalid() == false) 
+		{
 			std::cout << "isvalid" << std::endl;
-      myTimerQueue.pop();
-      delete ptimer_now;
-		} else
+			myTimerQueue.pop();
+			delete ptimer_now;
+		} 
+		else
 			break;
 	}
 	pthread_mutex_unlock(&qlock);
@@ -186,14 +198,14 @@ void handle_expired_event() {
 
 int main(int argc, char *argv[]) {
 	handle_for_sigpipe();
-  int epoll_fd = epoll_init();
+	int epoll_fd = epoll_init();
 	
 	assert(epoll_fd > 0);
 
 	// 创建线程池
-  threadpool_t *threadpool = threadpool_create(THREADPOOL_THREAD_NUM, QUEUE_SIZE);
+	threadpool_t *threadpool = threadpool_create(THREADPOOL_THREAD_NUM, QUEUE_SIZE);
 
-  int listen_fd = socket_bind_listen(PORT);
+	int listen_fd = socket_bind_listen(PORT);
 	
 	// 出错处理
 	if (listen_fd < 0) {
@@ -201,30 +213,32 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 	
-	if (set_socket_nonblocking(listen_fd) < 0) {
+	if (set_socket_nonblocking(listen_fd) < 0) 
+	{
 		perror("set socket non block failed");
-    return 1;
+		return 1;
 	}
 	// 考虑用智能指针
-  requestData *req = new requestData();
-  req -> setFd(listen_fd);
+	requestData *req = new requestData();
+	req -> setFd(listen_fd);
 
 	// epoll ET模式
-  __uint32_t event = EPOLLIN | EPOLLET;
-  epoll_add(epoll_fd, listen_fd, static_cast<void*>(req), event);
+	__uint32_t event = EPOLLIN | EPOLLET;
+	epoll_add(epoll_fd, listen_fd, static_cast<void*>(req), event);
     
-	while (true) {
+	while (true) 
+	{
 		std::cout << "main::while" << std::endl;
-    int events_num = my_epoll_wait(epoll_fd, events, MAXEVENTS, -1);
-    //printf("%zu\n", myTimerQueue.size());        
-    if (events_num == 0)
-            continue;
-    printf("events_num: %d\n", events_num);
-    printf("TimerQueue: %zu\n", myTimerQueue.size());    
-    // else
-    // cout << "one connection has come!" << endl;
-    // 遍历events数组，根据监听种类及描述符类型分发操作
-    handle_events(epoll_fd, listen_fd, events, events_num, PATH, threadpool);
+		int events_num = my_epoll_wait(epoll_fd, events, MAXEVENTS, -1);
+		//printf("%zu\n", myTimerQueue.size());        
+		if (events_num == 0)
+			continue;
+		printf("events_num: %d\n", events_num);
+		printf("TimerQueue: %zu\n", myTimerQueue.size());    
+		// else
+		// cout << "one connection has come!" << endl;
+		// 遍历events数组，根据监听种类及描述符类型分发操作
+		handle_events(epoll_fd, listen_fd, events, events_num, PATH, threadpool);
 		handle_expired_event();
 	}
 	return 0;

@@ -71,7 +71,8 @@ void handle_for_sigpipe() {
 }
 
 // 出错处理
-int set_socket_nonblocking(int fd) {
+int set_socket_nonblocking(int fd) 
+{
 	int flag = fcntl(fd, F_GETFL, 0);
   if(flag == -1)
 		return -1;
