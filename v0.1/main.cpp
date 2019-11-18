@@ -9,7 +9,6 @@
 #include <netinet/in.h>
 #include "threadpool.h"
 
-
 const int PORT = 8000;
 const int QUEUE_SIZE = 65535;
 const int THREADPOOL_THREAD_NUM = 4;
@@ -29,15 +28,14 @@ extern std::priority_queue<mytimer*, std::deque<mytimer*>, timerCmp> myTimerQueu
 
 int socket_bind_listen(int port) 
 {
-<<<<<<< HEAD
-	// 检查port值，取正确区间范围
+  // 检查port值，取正确区间范围
   if (port < 1024 || port > 65535)
 		return -1;
 
   // 创建socket(IPv4 + TCP)，返回监听描述符
   int listen_fd = 0;
   if((listen_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
-      return -1;
+		return -1;
 
   // 消除bind时"Address already in use"错误
   int optval = 1;
@@ -46,48 +44,23 @@ int socket_bind_listen(int port)
 
   // 设置服务器IP和Port，和监听描述副绑定
   struct sockaddr_in server_addr;
-	memset(&server_addr, 0, sizeof(server_addr));
+  bzero((char*)&server_addr, sizeof(server_addr));
   server_addr.sin_family = AF_INET;
   server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
   server_addr.sin_port = htons((unsigned short)port);
   if(bind(listen_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1)
 		return -1;
-=======
-    // 检查port值，取正确区间范围
-    if (port < 1024 || port > 65535)
+    
+	// 开始监听，最大等待队列长为LISTENQ
+  if(listen(listen_fd, LISTENQ) == -1)
         return -1;
-
-    // 创建socket(IPv4 + TCP)，返回监听描述符
-    int listen_fd = 0;
-    if((listen_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
-        return -1;
-
-    // 消除bind时"Address already in use"错误
-    int optval = 1;
-    if(setsockopt(listen_fd, SOL_SOCKET,  SO_REUSEADDR, &optval, sizeof(optval)) == -1)
-        return -1;
-
-    // 设置服务器IP和Port，和监听描述副绑定
-    struct sockaddr_in server_addr;
-    bzero((char*)&server_addr, sizeof(server_addr));
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    server_addr.sin_port = htons((unsigned short)port);
-    if(bind(listen_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1)
-        return -1;
->>>>>>> e350a0fc91655271137e193402831b568b24739e
-
-    // 开始监听，最大等待队列长为LISTENQ
-    if(listen(listen_fd, LISTENQ) == -1)
-        return -1;
-
-    // 无效监听描述符
-    if(listen_fd == -1)
-    {
-        close(listen_fd);
-        return -1;
+  
+	// 无效监听描述符
+  if(listen_fd == -1) {
+		close(listen_fd);
+    return -1;
     }
-    return listen_fd;
+	return listen_fd;
 }
 
 void myHandler(void *args) 
@@ -103,14 +76,10 @@ void acceptConnection(int listen_fd, int epoll_fd, const std::string &path)
 	struct sockaddr_in client_addr;
 	memset(&client_addr, 0, sizeof(struct sockaddr_in));
 	socklen_t client_addr_len = 0;
-<<<<<<< HEAD
-=======
-	
->>>>>>> e350a0fc91655271137e193402831b568b24739e
 	int accept_fd = 0;
 	accept_fd = accept(listen_fd, (struct sockaddr*)&client_addr, &client_addr_len);
 	std::cout << "accept fd: " << accept_fd << std::endl;
-		
+
 	// TCP的保活机制默认是关闭的
 	//int optval = 0;
 	//socklen_t len_optval = 4;
@@ -157,10 +126,7 @@ void handle_events(int epoll_fd, int listen_fd, struct epoll_event* events,
 		if (fd == listen_fd) 
 		{
 			std::cout << "This is a listen fd" << std::endl;
-<<<<<<< HEAD
 			// 接受连接
-=======
->>>>>>> e350a0fc91655271137e193402831b568b24739e
 			acceptConnection(listen_fd, epoll_fd, path);
 		} 
 		else 
@@ -170,10 +136,7 @@ void handle_events(int epoll_fd, int listen_fd, struct epoll_event* events,
 			if ((events[i].events & EPOLLERR) || (events[i].events & EPOLLHUP)
 					|| (!(events[i].events & EPOLLIN))) 
 			{
-<<<<<<< HEAD
-=======
 				printf("error event\n");
->>>>>>> e350a0fc91655271137e193402831b568b24739e
 				delete request;
 				continue;
 			}
@@ -203,13 +166,10 @@ void handle_expired_event()
 {
 	std::cout << "handle_expired_event" << std::endl;
 	pthread_mutex_lock(&qlock);
-<<<<<<< HEAD
-	while (!myTimerQueue.empty()) 
-	{
-=======
+	
 	 while (!myTimerQueue.empty()) 
 	 {
->>>>>>> e350a0fc91655271137e193402831b568b24739e
+
 		std::cout << "TimerQueue:" << myTimerQueue.size() << std::endl;
 		mytimer *ptimer_now = myTimerQueue.top();
 		if (ptimer_now -> isDeleted()) 
@@ -231,24 +191,13 @@ void handle_expired_event()
 }
 
 
-<<<<<<< HEAD
 int main(int argc, char *argv[]) 
 {
-  handle_for_sigpipe();
-  int epoll_fd = epoll_init();
-	
-  // 创建线程池
-  threadpool_t *threadpool = threadpool_create(THREADPOOL_THREAD_NUM, QUEUE_SIZE);
-=======
-int main(int argc, char *argv[]) {
 	handle_for_sigpipe();
 	int epoll_fd = epoll_init();
 	
-	assert(epoll_fd > 0);
-
 	// 创建线程池
 	threadpool_t *threadpool = threadpool_create(THREADPOOL_THREAD_NUM, QUEUE_SIZE);
->>>>>>> e350a0fc91655271137e193402831b568b24739e
 
 	int listen_fd = socket_bind_listen(PORT);
 	
@@ -258,8 +207,7 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 	
-	if (set_socket_nonblocking(listen_fd) < 0) 
-	{
+	if (set_socket_nonblocking(listen_fd) < 0) {
 		perror("set socket non block failed");
 		return 1;
 	}
@@ -278,16 +226,14 @@ int main(int argc, char *argv[]) {
 		//printf("%zu\n", myTimerQueue.size());        
 		if (events_num == 0)
 			continue;
-<<<<<<< HEAD
 		else
 			std::cout << "one connection has come!" << std::endl;
 
-=======
+
 		printf("events_num: %d\n", events_num);
-		printf("TimerQueue: %zu\n", myTimerQueue.size());    
+		printf("TimerQueue: %zu\n", myTimerQueue.size());   
 		// else
 		// cout << "one connection has come!" << endl;
->>>>>>> e350a0fc91655271137e193402831b568b24739e
 		// 遍历events数组，根据监听种类及描述符类型分发操作
 		handle_events(epoll_fd, listen_fd, events, events_num, PATH, threadpool);
 		handle_expired_event();

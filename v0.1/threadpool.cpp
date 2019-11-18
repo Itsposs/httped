@@ -68,13 +68,9 @@ int threadpool_add(threadpool_t *pool, void (*function)(void *), void *argument)
 	std::cout << "threadpool_add" << std::endl;
 	int err = 0;
 	int next;
-<<<<<<< HEAD
 	//(void) flags;
-	if(pool == NULL || function == NULL) {
-=======
 	if(pool == NULL || function == NULL) 
 	{
->>>>>>> e350a0fc91655271137e193402831b568b24739e
 		return THREADPOOL_INVALID;
 	}
   
@@ -83,27 +79,20 @@ int threadpool_add(threadpool_t *pool, void (*function)(void *), void *argument)
 		return THREADPOOL_LOCK_FAILURE;
 	}
 	next = (pool -> tail + 1) % pool -> queue_size;
-<<<<<<< HEAD
 	
-	do 
-	{
-		/* Are we full ? */
-		if (pool -> count == pool -> queue_size) {
-=======
 	do 
 	{
 		/* Are we full ? */
 		if (pool -> count == pool -> queue_size) 
 		{
->>>>>>> e350a0fc91655271137e193402831b568b24739e
 			err = THREADPOOL_QUEUE_FULL;
 			break;
 		}
 		/* Are we shutting down ? */
 		if (pool -> shutdown) 
 		{
-            err = THREADPOOL_SHUTDOWN;
-            break;
+			err = THREADPOOL_SHUTDOWN;
+      break;
 		}
 		/* Add task to queue */
 		pool -> queue[pool -> tail].function = function;
@@ -112,12 +101,8 @@ int threadpool_add(threadpool_t *pool, void (*function)(void *), void *argument)
 		pool -> count += 1;
         
 		/* pthread_cond_broadcast */
-<<<<<<< HEAD
-		if (pthread_cond_signal(&(pool -> notify)) != 0) {
-=======
 		if (pthread_cond_signal(&(pool -> notify)) != 0) 
 		{
->>>>>>> e350a0fc91655271137e193402831b568b24739e
 			err = THREADPOOL_LOCK_FAILURE;
 			break;
 		}
@@ -133,11 +118,6 @@ int threadpool_add(threadpool_t *pool, void (*function)(void *), void *argument)
 int threadpool_destroy(threadpool_t *pool, int flags) 
 {
 	std::cout << "threadpool_destroy" << std::endl;
-<<<<<<< HEAD
-	int i, err = 0;
-=======
->>>>>>> e350a0fc91655271137e193402831b568b24739e
-	
 	// 改用nullptr
 	if (pool == NULL) {
 		return THREADPOOL_INVALID;
@@ -147,10 +127,7 @@ int threadpool_destroy(threadpool_t *pool, int flags)
 		return THREADPOOL_LOCK_FAILURE;
 	}
 	
-<<<<<<< HEAD
-=======
 	int err = 0;
->>>>>>> e350a0fc91655271137e193402831b568b24739e
 	do 
 	{
 		/* Already shutting down */
@@ -162,22 +139,16 @@ int threadpool_destroy(threadpool_t *pool, int flags)
 		pool -> shutdown = (flags & THREADPOOL_GRACEFUL) ? graceful_shutdown : immediate_shutdown;
 		
 		/* Wake up all worker threads */
-		if((pthread_cond_broadcast(&(pool -> notify)) != 0) || 
-				(pthread_mutex_unlock(&(pool -> lock)) != 0)) {
+		if((pthread_cond_broadcast(&(pool -> notify)) != 0) || (pthread_mutex_unlock(&(pool -> lock)) != 0)) {
 			err = THREADPOOL_LOCK_FAILURE;
 			break;
 		}
 
 		/* Join all worker thread */
-<<<<<<< HEAD
-		for (i = 0; i < pool -> thread_count; ++i) {
-			if (pthread_join(pool -> threads[i], NULL) != 0) {
-=======
 		for (int i = 0; i < pool -> thread_count; ++i) 
 		{
 			if (pthread_join(pool -> threads[i], NULL) != 0) 
 			{
->>>>>>> e350a0fc91655271137e193402831b568b24739e
 				err = THREADPOOL_THREAD_FAILURE;
 			}
 		}
@@ -202,10 +173,10 @@ int threadpool_free(threadpool_t *pool)
 	{
 		free(pool -> threads);
 		free(pool -> queue);
- 
+
 		//Because we allocate pool->threads after initializing the
 		//mutex and condition variable, we're sure they're
-		//initialized. Let's lock the mutex just in case. 
+		//initialized. Let's lock the mutex just in case.
 		 
 		pthread_mutex_lock(&(pool -> lock));
 		pthread_mutex_destroy(&(pool -> lock));
@@ -229,7 +200,8 @@ static void *threadpool_thread(void *threadpool)
 
 		/* Wait on condition variable, check for spurious wakeups.
 			 When returning from pthread_cond_wait(), we own the lock. */
-		while ((pool -> count == 0) && (!pool -> shutdown)) {
+		while ((pool -> count == 0) && (!pool -> shutdown)) 
+		{
 				pthread_cond_wait(&(pool -> notify), &(pool -> lock));
 		}
 
@@ -256,5 +228,3 @@ static void *threadpool_thread(void *threadpool)
 	pthread_exit(NULL);
 	return(NULL);
 }
-
-
