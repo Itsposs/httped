@@ -62,10 +62,10 @@ int epoll_del(int epoll_fd, int fd, void *request, __uint32_t events)
 // 返回活跃事件数
 int my_epoll_wait(int epoll_fd, struct epoll_event* events, int max_events, int timeout)
 {
-    int ret_count = epoll_wait(epoll_fd, events, max_events, timeout);
-    if (ret_count < 0)
+    int count = epoll_wait(epoll_fd, events, max_events, timeout);
+    if (count < 0)
     {
         perror("epoll wait error");
     }
-    return ret_count;
+    return count;
 }

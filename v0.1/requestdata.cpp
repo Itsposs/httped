@@ -3,8 +3,8 @@
 #include "util.h"
 #include "epoll.h"
 #include <fcntl.h>
-#include <unistd.h>
 #include <iostream>
+#include <unistd.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
@@ -15,29 +15,26 @@
 
 
 pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t MimeType::lock = PTHREAD_MUTEX_INITIALIZER;
 std::unordered_map<std::string, std::string> MimeType::mime;
 
-std::string MimeType::getMime(const std::string &suffix) {
-	if (mime.size() == 0) {
-		pthread_mutex_lock(&lock);
-    if (mime.size() == 0) {
-			mime[".html"] = "text/html";
-			mime[".avi"] = "video/x-msvideo";
-			mime[".bmp"] = "image/bmp";
-			mime[".c"] = "text/plain";
-			mime[".doc"] = "application/msword";
-			mime[".gif"] = "image/gif";
-			mime[".gz"] = "application/x-gzip";
-			mime[".htm"] = "text/html";
-			mime[".ico"] = "application/x-ico";
-			mime[".jpg"] = "image/jpeg";
-			mime[".png"] = "image/png";
-			mime[".txt"] = "text/plain";
-			mime[".mp3"] = "audio/mp3";
-			mime["default"] = "text/html";
-		}
-		pthread_mutex_unlock(&lock);
+std::string MimeType::getMime(const std::string &suffix) 
+{
+	if (mime.size() == 0) 
+	{
+		mime[".html"] = "text/html";
+		mime[".avi"] = "video/x-msvideo";
+		mime[".bmp"] = "image/bmp";
+		mime[".c"] = "text/plain";
+		mime[".doc"] = "application/msword";
+		mime[".gif"] = "image/gif";
+		mime[".gz"] = "application/x-gzip";
+		mime[".htm"] = "text/html";
+		mime[".ico"] = "application/x-ico";
+		mime[".jpg"] = "image/jpeg";
+		mime[".png"] = "image/png";
+		mime[".txt"] = "text/plain";
+		mime[".mp3"] = "audio/mp3";
+		mime["default"] = "text/html";
 	}
   if (mime.find(suffix) == mime.end())
 		return mime["default"];
@@ -94,51 +91,49 @@ void requestData::setFd(int _fd)
 void requestData::reset()
 {
 	std::cout << "reset()" << std::endl;
-    againTimes = 0;
-    content.clear();
-    file_name.clear();
-    path.clear();
-    now_read_pos = 0;
-    state = STATE_PARSE_URI;
-    h_state = h_start;
-    headers.clear();
-    keep_alive = false;
+  againTimes = 0;
+  content.clear();
+  file_name.clear();
+  path.clear();
+  now_read_pos = 0;
+  state = STATE_PARSE_URI;
+  h_state = h_start;
+  headers.clear();
+  keep_alive = false;
 }
 
 void requestData::seperateTimer()
 {
 	std::cout << "seperateTimer()" << std::endl;
-    if (timer)
-    {
-        timer -> clearReq();
-        timer = NULL;
-    }
+  if (timer)
+  {
+		timer -> clearReq();
+    timer = NULL;
+  }
 }
 
 void requestData::handleRequest()
 {
 	std::cout << "handleRequest()" << std::endl;
-    char buff[MAX_BUFF];
-    bool isError = false;
+  char buff[MAX_BUFF];
+  bool isError = false;
 
 	while(true)
-    {
-        int read_num = readn(fd, buff, MAX_BUFF);
-		std::cout << "read_num:" << read_num << std::endl;
+	{
+    int read_num = readn(fd, buff, MAX_BUFF);
 		std::cout << "buff:" << buff << std::endl;
-
 		if(read_num < 0)
-        {
-            isError = true;
-            break;
-        }
-        else if(read_num == 0)
-        {
+    {
+			isError = true;
+      break;
+    }
+    else if(read_num == 0)
+		{
             // 有请求出现但是读不到数据，可能是Request Aborted，或者来自网络的数据没有达到等原因
-            perror("read_num == 0");
-            if(errno == EAGAIN)
-            {
-                if(againTimes > AGAIN_MAX_TIMES)
+			std::cout << "read_num == 0" <<  std::endl;
+			if(errno == EAGAIN)
+      {
+				if(againTimes > AGAIN_MAX_TIMES)
                     isError = true;
                 else
                     ++againTimes;
@@ -148,9 +143,8 @@ void requestData::handleRequest()
             break;
         }
         
-				std::string now_read(buff, buff + read_num);
+		std::string now_read(buff, buff + read_num);
         content += now_read;
-		//std::cout << "content:" << content << std::endl;
 
         if(state == STATE_PARSE_URI)
         {
@@ -161,12 +155,12 @@ void requestData::handleRequest()
             }
             else if(flag == PARSE_URI_ERROR)
             {
-                perror("2");
                 isError = true;
                 break;
             }
         }
-        if(state == STATE_PARSE_HEADERS)
+        
+		if(state == STATE_PARSE_HEADERS)
         {
             int flag = this -> parse_Headers();
             if(flag == PARSE_HEADER_AGAIN)
@@ -175,7 +169,6 @@ void requestData::handleRequest()
             }
             else if(flag == PARSE_HEADER_ERROR)
             {
-                perror("3");
                 isError = true;
                 break;
             }
@@ -188,6 +181,7 @@ void requestData::handleRequest()
                 state = STATE_ANALYSIS;
             }
         }
+
         if (state == STATE_RECV_BODY)
         {
             int content_length = -1;
@@ -204,6 +198,7 @@ void requestData::handleRequest()
                 continue;
             state = STATE_ANALYSIS;
         }
+
         if(state == STATE_ANALYSIS)
         {
             int flag = this -> analysisRequest();
@@ -275,7 +270,6 @@ int requestData::parse_URI()
 	for(auto i = 0; i < pos; i++)
 		std::cout << str[i];
 	std::cout << std::endl;
-	std::cout << "now_read_pos:" << now_read_pos << std::endl;
     
 	if (pos < 0)
     {
@@ -308,8 +302,8 @@ int requestData::parse_URI()
     {
         method = METHOD_GET;
     }
-    printf("method = %d\n", method);
-    // filename
+	std::cout << "method: " << method << std::endl;
+	// filename
     pos = request_line.find("/", pos);
     if(pos < 0)
     {
@@ -441,8 +435,8 @@ int requestData::parse_Headers()
                 if(str[i] == '\n')
                 {
                     h_state = h_LF;
-										std::string key(str.begin() + key_start, str.begin() + key_end);
-										std::string value(str.begin() + value_start, str.begin() + value_end);
+					std::string key(str.begin() + key_start, str.begin() + key_end);
+					std::string value(str.begin() + value_start, str.begin() + value_end);
                     headers[key] = value;
                     now_read_line_begin = i;
                 }
@@ -621,51 +615,51 @@ mytimer::mytimer(requestData *_request_data, int timeout): deleted(false), reque
 
 mytimer::~mytimer()
 {
-    std::cout << "~mytimer()" << std::endl;
-    if (request_data != NULL)
-    {
-        std::cout << "request_data=" << request_data << std::endl;
-        delete request_data;
-        request_data = NULL;
-    }
+	std::cout << "~mytimer()" << std::endl;
+  if (request_data != NULL)
+  {
+		std::cout << "request_data=" << request_data << std::endl;
+    delete request_data;
+    request_data = NULL;
+  }
 }
 
 void mytimer::update(int timeout)
 {
 	std::cout << "update()" << std::endl;
-    struct timeval now;
-    gettimeofday(&now, NULL);
-    expired_time = ((now.tv_sec * 1000) + (now.tv_usec / 1000)) + timeout;
+  struct timeval now;
+  gettimeofday(&now, NULL);
+  expired_time = ((now.tv_sec * 1000) + (now.tv_usec / 1000)) + timeout;
 }
 
 bool mytimer::isvalid()
 {
 	std::cout << "isvalid()" << std::endl;
-    struct timeval now;
-    gettimeofday(&now, NULL);
-    size_t temp = ((now.tv_sec * 1000) + (now.tv_usec / 1000));
-    if (temp < expired_time)
-    {
-        return true;
-    }
-    else
-    {
-        this -> setDeleted();
-        return false;
-    }
+  struct timeval now;
+  gettimeofday(&now, NULL);
+  size_t temp = ((now.tv_sec * 1000) + (now.tv_usec / 1000));
+  if (temp < expired_time)
+  {
+		return true;
+  }
+  else
+  {
+		this -> setDeleted();
+    return false;
+  }
 }
 
 void mytimer::clearReq()
 {
 	std::cout << "clearReq()" << std::endl;
-    request_data = NULL;
-    this -> setDeleted();
+  request_data = NULL;
+  this -> setDeleted();
 }
 
 void mytimer::setDeleted()
 {
 	std::cout << "setDeleted()" << std::endl;
-    deleted = true;
+  deleted = true;
 }
 
 bool mytimer::isDeleted() const

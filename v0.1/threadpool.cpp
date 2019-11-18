@@ -58,40 +58,43 @@ threadpool_t *threadpool_create(int thread_count, int queue_size)
 	return NULL;
 }
 
-int threadpool_add(threadpool_t *pool, void (*function)(void *), void *argument) {
+int threadpool_add(threadpool_t *pool, void (*function)(void *), void *argument) 
+{
 	std::cout << "threadpool_add" << std::endl;
-  int err = 0;
-  int next;
+	int err = 0;
+	int next;
 	//(void) flags;
-  if(pool == NULL || function == NULL) {
+	if(pool == NULL || function == NULL) {
 		return THREADPOOL_INVALID;
 	}
   
 	if(pthread_mutex_lock(&(pool -> lock)) != 0) {
 		return THREADPOOL_LOCK_FAILURE;
 	}
-  next = (pool -> tail + 1) % pool -> queue_size;
-  do {
+	next = (pool -> tail + 1) % pool -> queue_size;
+	
+	do 
+	{
 		/* Are we full ? */
-    if (pool -> count == pool -> queue_size) {
+		if (pool -> count == pool -> queue_size) {
 			err = THREADPOOL_QUEUE_FULL;
-      break;
+			break;
 		}
 		/* Are we shutting down ? */
 		if (pool -> shutdown) {
             err = THREADPOOL_SHUTDOWN;
             break;
 		}
-    /* Add task to queue */
-    pool -> queue[pool -> tail].function = function;
-    pool -> queue[pool -> tail].argument = argument;
-    pool -> tail = next;
-    pool -> count += 1;
+		/* Add task to queue */
+		pool -> queue[pool -> tail].function = function;
+		pool -> queue[pool -> tail].argument = argument;
+		pool -> tail = next;
+		pool -> count += 1;
         
-    /* pthread_cond_broadcast */
-    if (pthread_cond_signal(&(pool -> notify)) != 0) {
+		/* pthread_cond_broadcast */
+		if (pthread_cond_signal(&(pool -> notify)) != 0) {
 			err = THREADPOOL_LOCK_FAILURE;
-      break;
+			break;
 		}
 	} while(false);
 	
@@ -101,24 +104,26 @@ int threadpool_add(threadpool_t *pool, void (*function)(void *), void *argument)
 	return err;
 }
 
-int threadpool_destroy(threadpool_t *pool, int flags) {
+int threadpool_destroy(threadpool_t *pool, int flags) 
+{
 	std::cout << "threadpool_destroy" << std::endl;
-  int i, err = 0;
+	int i, err = 0;
 	
 	// 改用nullptr
-  if (pool == NULL) {
+	if (pool == NULL) {
 		return THREADPOOL_INVALID;
 	}
 
-  if (pthread_mutex_lock(&(pool -> lock)) != 0) {
+	if (pthread_mutex_lock(&(pool -> lock)) != 0) {
 		return THREADPOOL_LOCK_FAILURE;
 	}
 	
-	do {
+	do 
+	{
 		/* Already shutting down */
-    if (pool -> shutdown) {
+		if (pool -> shutdown) {
 			err = THREADPOOL_SHUTDOWN;
-      break;
+			break;
 		}
 		
 		pool -> shutdown = (flags & THREADPOOL_GRACEFUL) ? graceful_shutdown : immediate_shutdown;
@@ -127,11 +132,11 @@ int threadpool_destroy(threadpool_t *pool, int flags) {
 		if((pthread_cond_broadcast(&(pool -> notify)) != 0) || 
 				(pthread_mutex_unlock(&(pool -> lock)) != 0)) {
 			err = THREADPOOL_LOCK_FAILURE;
-      break;
+			break;
 		}
 
-    /* Join all worker thread */
-    for (i = 0; i < pool -> thread_count; ++i) {
+		/* Join all worker thread */
+		for (i = 0; i < pool -> thread_count; ++i) {
 			if (pthread_join(pool -> threads[i], NULL) != 0) {
 				err = THREADPOOL_THREAD_FAILURE;
 			}

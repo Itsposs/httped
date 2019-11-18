@@ -40,7 +40,6 @@ class MimeType
 	private:
 		MimeType();
 		MimeType(const MimeType &m);
-		static pthread_mutex_t lock;
 		static std::unordered_map<std::string, std::string> mime;
 	public:
 		static std::string getMime(const std::string &suffix);
@@ -66,6 +65,18 @@ struct mytimer;
 // 注释较少
 class requestData
 {
+	public:
+		requestData();
+		requestData(int _epollfd, int _fd, std::string _path);
+		~requestData();
+		void addTimer(mytimer *mtimer);
+		void reset();
+		void seperateTimer();
+		int getFd() const;
+		void setFd(int _fd);
+		void handleRequest();
+		void handleError(int fd, int err_num, std::string short_msg);
+	
 	private:
 		int againTimes;
 		std::string path;
@@ -84,39 +95,28 @@ class requestData
 		std::unordered_map<std::string, std::string> headers;
 		mytimer *timer;
 
-	private:
 		int parse_URI();
 		int parse_Headers();
 		int analysisRequest();
 
-	public:
-		requestData();
-		requestData(int _epollfd, int _fd, std::string _path);
-		~requestData();
-		void addTimer(mytimer *mtimer);
-		void reset();
-		void seperateTimer();
-		int getFd() const;
-		void setFd(int _fd);
-		void handleRequest();
-		void handleError(int fd, int err_num, std::string short_msg);
 };
 
 
 struct mytimer
 {
-    bool deleted;
-    size_t expired_time;
-    requestData *request_data;
+	public:
+		mytimer(requestData *_request_data, int timeout);
+		~mytimer();
+		bool isvalid();
+		void clearReq();
+		void setDeleted();
+		bool isDeleted() const;
+		void update(int timeout);
+		size_t getExpTime() const;
 
-    mytimer(requestData *_request_data, int timeout);
-    ~mytimer();
-    void update(int timeout);
-    bool isvalid();
-    void clearReq();
-    void setDeleted();
-    bool isDeleted() const;
-    size_t getExpTime() const;
+		bool deleted;
+		size_t expired_time;
+		requestData *request_data;
 };
 
 
