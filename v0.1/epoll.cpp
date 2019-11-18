@@ -5,7 +5,7 @@
 #include "threadpool.h"
 
 
-struct epoll_event* events;
+struct epoll_event *events;
 
 int epoll_init() {
 	int epoll_fd = epoll_create(LISTENQ + 1);
@@ -25,7 +25,7 @@ int epoll_add(int epoll_fd, int fd, void *request, __uint32_t events)
 
     if(epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &event) < 0)
     {
-        perror("epoll_add error");
+		std::cout << "epoll add error." << std::endl;
         return -1;
     }
     return 0;
@@ -65,7 +65,8 @@ int my_epoll_wait(int epoll_fd, struct epoll_event* events, int max_events, int 
     int count = epoll_wait(epoll_fd, events, max_events, timeout);
     if (count < 0)
     {
-        perror("epoll wait error");
+		std::cout << "epoll wait error." << std::endl;
+		return -1;
     }
     return count;
 }

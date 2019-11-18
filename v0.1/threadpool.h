@@ -2,8 +2,8 @@
 #define _THREADPOOL_H
 
 
-#include "requestdata.h"
 #include <pthread.h>
+#include "requestdata.h"
 
 const int THREADPOOL_INVALID = -1;
 const int THREADPOOL_LOCK_FAILURE = -2;
@@ -51,19 +51,20 @@ typedef struct {
  */
 
 // 可以改用class
-struct threadpool_t
+class threadpool_t
 {
-    pthread_mutex_t lock;
-    pthread_cond_t notify;
-    pthread_t *threads;
-    threadpool_task_t *queue;
-    int thread_count;
-    int queue_size;
-    int head;
-    int tail;
-    int count;
-    int shutdown;
-    int started;
+	public:
+		pthread_mutex_t lock;
+		pthread_cond_t notify;
+		pthread_t *threads;
+		threadpool_task_t *queue;
+		int thread_count;
+		int queue_size;
+		int head;
+		int tail;
+		int count;
+		int shutdown;
+		int started;
 };
 
 threadpool_t *threadpool_create(int thread_count, int queue_size);

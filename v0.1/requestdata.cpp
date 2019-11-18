@@ -11,16 +11,23 @@
 #include <sys/time.h>
 #include <sys/epoll.h>
 #include "requestdata.h"
-#include <unordered_map>
 
 
 pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;
+<<<<<<< HEAD
 std::unordered_map<std::string, std::string> MimeType::mime;
 
+=======
+
+std::priority_queue<mytimer*, std::deque<mytimer*>, timerCmp> myTimerQueue;
+
+std::unordered_map<std::string, std::string> MimeType::mime;
+>>>>>>> e350a0fc91655271137e193402831b568b24739e
 std::string MimeType::getMime(const std::string &suffix) 
 {
 	if (mime.size() == 0) 
 	{
+<<<<<<< HEAD
 		mime[".html"] = "text/html";
 		mime[".avi"] = "video/x-msvideo";
 		mime[".bmp"] = "image/bmp";
@@ -35,17 +42,34 @@ std::string MimeType::getMime(const std::string &suffix)
 		mime[".txt"] = "text/plain";
 		mime[".mp3"] = "audio/mp3";
 		mime["default"] = "text/html";
+=======
+		if (mime.size() == 0) 
+		{
+			mime[".html"] = "text/html";
+			mime[".avi"] = "video/x-msvideo";
+			mime[".bmp"] = "image/bmp";
+			mime[".c"] = "text/plain";
+			mime[".doc"] = "application/msword";
+			mime[".gif"] = "image/gif";
+			mime[".gz"] = "application/x-gzip";
+			mime[".htm"] = "text/html";
+			mime[".ico"] = "application/x-ico";
+			mime[".jpg"] = "image/jpeg";
+			mime[".png"] = "image/png";
+			mime[".txt"] = "text/plain";
+			mime[".mp3"] = "audio/mp3";
+			mime["default"] = "text/html";
+		}
+>>>>>>> e350a0fc91655271137e193402831b568b24739e
 	}
-  if (mime.find(suffix) == mime.end())
+	if (mime.find(suffix) == mime.end())
 		return mime["default"];
 	else
 		return mime[suffix];
 }
 
 
-std::priority_queue<mytimer*, std::deque<mytimer*>, timerCmp> myTimerQueue;
-
-requestData::requestData(): againTimes(0), now_read_pos(0), 
+requestData::requestData() : againTimes(0), now_read_pos(0), 
 	state(STATE_PARSE_URI), h_state(h_start), isfinish(false), 
 	keep_alive(false),timer(NULL) {}
 
@@ -60,7 +84,7 @@ requestData::~requestData()
     std::cout << "~requestData()" << std::endl;
     struct epoll_event ev;
     // 超时的一定都是读请求，没有"被动"写
-	// 先删除再清理时间，关闭套接字
+  	// 先删除再清理时间，关闭套接字
     ev.events = EPOLLIN | EPOLLET | EPOLLONESHOT;
     ev.data.ptr = (void*)this;
     epoll_ctl(epollfd, EPOLL_CTL_DEL, fd, &ev);
@@ -118,6 +142,7 @@ void requestData::handleRequest()
   char buff[MAX_BUFF];
   bool isError = false;
 
+<<<<<<< HEAD
 	while(true)
 	{
     int read_num = readn(fd, buff, MAX_BUFF);
@@ -134,6 +159,25 @@ void requestData::handleRequest()
 			if(errno == EAGAIN)
       {
 				if(againTimes > AGAIN_MAX_TIMES)
+=======
+	while (true)
+    {
+		int read_num = readn(fd, buff, MAX_BUFF);
+		std::cout << "buff:" << buff << std::endl;
+
+		if (read_num < 0)
+        {
+            isError = true;
+            break;
+        }
+        else if(read_num == 0)
+        {
+            // 有请求出现但是读不到数据，可能是Request Aborted，或者来自网络的数据没有达到等原因
+			std::cout << "read_num == 0." << std::endl;
+            if(errno == EAGAIN)
+            {
+                if(againTimes > AGAIN_MAX_TIMES)
+>>>>>>> e350a0fc91655271137e193402831b568b24739e
                     isError = true;
                 else
                     ++againTimes;
@@ -142,7 +186,11 @@ void requestData::handleRequest()
                 isError = true;
             break;
         }
+<<<<<<< HEAD
         
+=======
+		
+>>>>>>> e350a0fc91655271137e193402831b568b24739e
 		std::string now_read(buff, buff + read_num);
         content += now_read;
 
@@ -231,7 +279,6 @@ void requestData::handleRequest()
     {
         if(keep_alive)
         {
-            printf("ok\n");
             this -> reset();
         }
         else
@@ -267,7 +314,8 @@ int requestData::parse_URI()
     // 读到完整的请求行再开始解析请求
     int pos = str.find('\r', now_read_pos);
 	std::cout << "pos:" << pos << std::endl;
-	for(auto i = 0; i < pos; i++)
+
+	for (int i = 0; i < pos; i++)
 		std::cout << str[i];
 	std::cout << std::endl;
     
@@ -279,14 +327,16 @@ int requestData::parse_URI()
     // 去掉请求行所占的空间，节省空间
 	std::string request_line = str.substr(0, pos);
 	std::cout << "request_line:" << request_line << std::endl;
-    if(str.size() > (unsigned int)(pos + 1))
+    
+	if(str.size() > (unsigned int)(pos + 1))
         str = str.substr(pos + 1);
     else 
         str.clear();
 	//std::cout << "str:" << str << std::endl;
     // Method
     pos = request_line.find("GET");
-    if(pos < 0)
+    
+	if(pos < 0)
     {
         pos = request_line.find("POST");
         if(pos < 0)
@@ -569,7 +619,7 @@ int requestData::analysisRequest()
         send_len = writen(fd, src_addr, sbuf.st_size);
         if(send_len != (size_t)sbuf.st_size)
         {
-            perror("Send file failed");
+			std::cout << "send file error." <<  std::endl;
             return ANALYSIS_ERROR;
         }
 		// ???
@@ -590,7 +640,7 @@ void requestData::handleError(int fd, int err_num, std::string short_msg)
     body_buff += "<html><title>TKeed Error</title>";
     body_buff += "<body bgcolor=\"ffffff\">";
     body_buff += std::to_string(err_num) + short_msg;
-    body_buff += "<hr><em> LinYa's Web Server</em>\n</body></html>";
+    body_buff += "<hr><em> Hvate's Web Server</em>\n</body></html>";
 
     header_buff += "HTTP/1.1 " + std::to_string(err_num) + short_msg + "\r\n";
     header_buff += "Content-type: text/html\r\n";

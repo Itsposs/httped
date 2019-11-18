@@ -37,12 +37,18 @@ const int EPOLL_WAIT_TIME = 500;
 
 class MimeType
 {
-	private:
-		MimeType();
-		MimeType(const MimeType &m);
-		static std::unordered_map<std::string, std::string> mime;
 	public:
 		static std::string getMime(const std::string &suffix);
+	private:
+		MimeType();
+<<<<<<< HEAD
+		MimeType(const MimeType &m);
+=======
+		~MimeType();
+		MimeType(const MimeType &rhs);
+		MimeType & operator=(const MimeType &rhs);
+>>>>>>> e350a0fc91655271137e193402831b568b24739e
+		static std::unordered_map<std::string, std::string> mime;
 };
 
 

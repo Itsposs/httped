@@ -4,7 +4,7 @@ OBJS    := $(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(SOURCE)))
 TARGET  := myserver
 CC      := g++
 LIBS    := -lpthread 
-INCLUDE:= -I./usr/local/include/
+INCLUDE :=  #-I./usr/local/include/
 CFLAGS  := -std=c++11 -g -Wall -O3 $(INCLUDE)
 CXXFLAGS:= $(CFLAGS)
 
